@@ -1,0 +1,69 @@
+//******** MODELS ********
+USER {
+    username,
+    password,
+    email,
+    address,
+    type // ADMIN ILI USER
+}
+
+Category{
+    name
+}
+
+Item{
+    name,
+    brand,
+    count
+    price,
+    gender,
+    tags[],
+    categoryID
+}
+
+Transaction {
+    date,
+    paymentType,
+    deliveryType,
+    userID,
+    articlesID[]
+},
+
+Review {
+    grade //OCENA,
+    comment,
+    articleID,
+    userID
+}
+
+//******** CONTROLERS ********
+USER {
+    Login, 
+    Register,
+    GetUserByID,
+    DeleteUser,
+    UpdateUser
+}
+
+Category{
+    CRUD
+}
+
+Item{
+    CRUD,
+    GetArticlesByGender,
+    GetArticlesByTags, 
+    GetArclesByCategoryID
+}
+
+Transaction {
+    CRUD,
+    GetTransactionByUserId,
+    GetTransactionByArticleId,
+}
+
+Review {
+    CRUD,
+    GetReviewByArticleId,
+    GetReviewByUserId
+}
