@@ -1,9 +1,6 @@
-const neo4j = require('../config/neo4j_config');
-const owner = require('../models/ownerModel');
-const business = require('../models/businessModel');
-const freelancer = require('../models/freelancerModel');
+const mongoose = require('mongoose');
+const user = require('../models/userModel');
 const bcrypt = require('bcrypt');
-//const { GetOwnerByUsername,GetBusinessByUsername,GetFreelancerByUsername } = require('../controllers/loginController')
 const saltRounds = 10;
 
 const CreateOwner = async (req,res) => {  
@@ -18,95 +15,66 @@ const CreateOwner = async (req,res) => {
     }
     //Sve šifre obavezo heširamo kako se ne bi čuvale u svom normalnom stanju i ne bi bile sigurnosni rizik
     bcrypt.hash(req.body.password, saltRounds).then(hash => {
-
-        neo4j.model("Owner").create({
+        const owner = new User({
+            //_id: mongoose.Types.ObjectId(),
             username: req.body.username,
+            password: req.body.password,
+            role: req.body.role,
             email: req.body.email,
-            contact: req.body.contact,
-            name: req.body.name,
-            surname: req.body.surname,
-            password: hash,
-            role: "owner"
-        
-        }).then(owner => {
-
-            let user = {
-                username : owner._properties.get("username"),
-                ID :owner._properties.get("ID"),
-                email : owner._properties.get("email"),
-                contact : owner._properties.get("contact"),
-                role :owner._properties.get("role")
-            }
-            res.status(200).send(user)  
-
-        }).catch(err => {
-            console.log(err);
-            res.status(400).send(err)})
-
-    }).catch(err => res.status(500).send(err))
-}
-
-const CreateBusiness = async (req,res) => {  
-    if(await usernameTaken(req.body.username)){
-        res.status(409).send("USERNAME TAKEN");
-        return;
-    }
-    bcrypt.hash(req.body.password, saltRounds).then(hash => {
-
-        neo4j.model("Business").create({
-            username: req.body.username,
-            email: req.body.email,
-            contact: req.body.contact,
-            name: req.body.name,
-            nr_emplyees: req.body.nr_emplyees,
-            password: hash,
-            role: "business"
-        
-        }).then(business => {
-
-            let user = {
-                username : business._properties.get("username"),
-                ID :business._properties.get("ID"),
-                email : business._properties.get("email"),
-                contact : business._properties.get("contact"),
-                role :business._properties.get("role")
-            }
-            res.status(200).send(user)  
-
-        }).catch(err => res.status(400).send(err))
-
-    }).catch(err => res.status(500).send(err))
-}
-
-const CreateFreelancer = async (req,res) => {  
-    if(await usernameTaken(req.body.username)){
-        res.status(409).send("USERNAME TAKEN");
-        return;
-    }
-    bcrypt.hash(req.body.password, saltRounds).then(hash => {
-
-        neo4j.model("Freelancer").create({
-            username: req.body.username,
-            email: req.body.email,
-            contact: req.body.contact,
-            name: req.body.name,
             address: req.body.address,
-            password: hash,
-            role: "freelancer"
-        
-        }).then(freelancer => {
+            firstname: req.body.firstname
+        });
+        return owner
+        .save()
+        .then((newOwner) => {
+            return res.status(201).json({
+                success: true,
+                message: 'New owner created successfully',
+                Owner: newOwner,
+            });
+        })
+        .catch((error) => {
+            res.status(500).json({
+                success: false,
+                message: 'Server error. Please try again.',
+                error: error.message,
+            });
+        });
+    }).catch(err => res.status(500).send(err))
+}
 
-            let user = {
-                username : freelancer._properties.get("username"),
-                ID :freelancer._properties.get("ID"),
-                email : freelancer._properties.get("email"),
-                contact : freelancer._properties.get("contact"),
-                role :freelancer._properties.get("role")
-            }
-            res.status(200).send(user)
-
-        }).catch(err => res.status(400).send(err))
-
+const CreateCustomer = async (req,res) => {  
+    if(await usernameTaken(req.body.username)){
+        res.status(409).send("USERNAME TAKEN");
+        return;
+    }
+    bcrypt.hash(req.body.password, saltRounds).then(hash => {
+        const customer = new User({
+            //_id: mongoose.Types.ObjectId(),
+            username: req.body.username,
+            password: req.body.password,
+            role: req.body.role,
+            email: req.body.email,
+            address: req.body.address,
+            firstname: req.body.firstname,
+            phone: req.body.phone,
+        });
+        return customer
+        .save()
+        .then((newCustomer) => {
+            return res.status(201).json({
+                success: true,
+                message: 'New customer created successfully',
+                Customer: newCustomer,
+            });
+        })
+        .catch((error) => {
+            res.status(500).json({
+                success: false,
+                message: 'Server error. Please try again.',
+                error: error.message,
+            });
+        });
     }).catch(err => res.status(500).send(err))
 }
 //Proveravamo da nije neki username zauzet za svaki slučaj
@@ -117,6 +85,5 @@ const usernameTaken = async (username, email) => {
 
 module.exports = {
     CreateOwner,
-    CreateBusiness,
-    CreateFreelancer
+    CreateCustomer,
 };

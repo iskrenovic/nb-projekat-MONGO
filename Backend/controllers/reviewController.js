@@ -1,33 +1,33 @@
 const mongoose = require('mongoose');
-const Category = require('../models/categoryModel');
+const Review = require('../models/reviewModel');
 
-const GetCategory = async(req, res) => {
+const GetReview = async(req, res) => {
     const id = req.params.ID;
-    Category.findById(id)
-    .then((singleCategory) => {
+    Review.findById(id)
+    .then((singleReview) => {
         res.status(200).json({
             success: true,
-            message: `More on ${singleCategory.name}`,
-            Category: singleCategory,
+            message: `Successful`,
+            Review: singleReview,
         });
     })
     .catch((err) => {
         res.status(500).json({
             success: false,
-            message: 'This category does not exist',
+            message: 'This review does not exist',
             error: err.message,
         });
     });
 }
 
-const GetAllCategories = async(req,res) =>{
-    Category.find()
-    .select('name')
-    .then((allCategories) => {
+const GetAllReviews = async(req,res) =>{
+    Review.find()
+    .select('grade comment')
+    .then((allReviews) => {
         return res.status(200).json({
             success: true,
-            message: 'A list of all categories',
-            Category: allCategories,
+            message: 'A list of all reviews',
+            Review: allReviews,
         });
     })
     .catch((err) => {
@@ -39,18 +39,19 @@ const GetAllCategories = async(req,res) =>{
     });
 }
 
-const CreateCategory = async (req, res) => {
-    const category = new Category({
+const CreateReview = async (req, res) => {
+    const review = new Review({
         //_id: mongoose.Types.ObjectId(),
-        name: req.body.name,
+        grade: req.body.grade,
+        comment: req.body.comment,
     });
-    return category
+    return review
     .save()
-    .then((newCategory) => {
+    .then((newReview) => {
         return res.status(201).json({
             success: true,
-            message: 'New category created successfully',
-            Transaction: newCategory,
+            message: 'New review created successfully',
+            Review: newReview,
         });
     })
     .catch((error) => {
@@ -62,9 +63,9 @@ const CreateCategory = async (req, res) => {
     });
 }  
 
-const DeleteCategory = async (req, res) => {
+const DeleteReview = async (req, res) => {
     const id = req.params.ID;
-    Category.findByIdAndRemove(id)
+    Review.findByIdAndRemove(id)
     .exec()
     .then(()=> res.status(204).json({
         success: true,
@@ -74,16 +75,16 @@ const DeleteCategory = async (req, res) => {
     }));
 }
 
-const UpdateCategory = async (req, res) => {
+const UpdateReview = async (req, res) => {
     const id = req.params.ID;
     const updateObject = req.body;
-    Category.findByIdAndUpdate(id, updateObject)
+    Review.findByIdAndUpdate(id, updateObject)
     .exec()
     .then(() => {
         res.status(200).json({
             success: true,
-            message: 'Category is updated',
-            updateCategory: updateObject,
+            message: 'Review is updated',
+            updateReview: updateObject,
         });
     })
     .catch((err) => {
@@ -95,9 +96,9 @@ const UpdateCategory = async (req, res) => {
 }
 
 module.exports = {
-    GetCategory,
-    GetAllCategories,
-    CreateCategory,
-    DeleteCategory,
-    UpdateCategory,
+    GetReview,
+    GetAllReviews,
+    CreateReview,
+    DeleteReview,
+    UpdateReview,
 };
