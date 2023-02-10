@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api';
 import searchBar from '@/components/searchBar.vue';
 import CategoryList from '@/components/category-list.vue';
 export default defineComponent({

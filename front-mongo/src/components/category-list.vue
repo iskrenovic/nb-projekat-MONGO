@@ -82,6 +82,7 @@ export default defineComponent({
         async deleteItem(item){
             this.clickable = false;
             let ans = window.confirm(`Are you sure you want to delete ${item.name} space?`)
+            console.log(ans);
             /* @D
             if(ans){
                 //TODO
