@@ -1,33 +1,33 @@
 const mongoose = require('mongoose');
-const Category = require('../models/categoryModel');
+const Item = require('../models/itemModel');
 
-const GetCategory = async(req, res) => {
+const GetItem = async(req, res) => {
     const id = req.params.ID;
-    Category.findById(id)
-    .then((singleCategory) => {
+    Item.findById(id)
+    .then((singleItem) => {
         res.status(200).json({
             success: true,
-            message: `More on ${singleCategory.name}`,
-            Category: singleCategory,
+            message: `More on ${singleItem.name}`,
+            Item: singleItem,
         });
     })
     .catch((err) => {
         res.status(500).json({
             success: false,
-            message: 'This category does not exist',
+            message: 'This item does not exist',
             error: err.message,
         });
     });
 }
 
-const GetAllCategories = async(req,res) =>{
-    Category.find()
-    .select('name')
-    .then((allCategories) => {
+const GetAllItems = async(req,res) =>{
+    Item.find()
+    .select('name brand count price gender tags')
+    .then((allItems) => {
         return res.status(200).json({
             success: true,
-            message: 'A list of all categories',
-            Category: allCategories,
+            message: 'A list of all items',
+            Item: allItems,
         });
     })
     .catch((err) => {
@@ -39,18 +39,23 @@ const GetAllCategories = async(req,res) =>{
     });
 }
 
-const CreateCategory = async (req, res) => {
-    const category = new Category({
+const CreateItem = async (req, res) => {
+    const item = new Item({
         //_id: mongoose.Types.ObjectId(),
         name: req.body.name,
+        brand: req.body.brand,
+        count: req.body.count,
+        price: req.body.price,
+        gender: req.body.gender,
+        tags: req.body.tags
     });
-    return category
+    return item
     .save()
-    .then((newCategory) => {
+    .then((newItem) => {
         return res.status(201).json({
             success: true,
-            message: 'New category created successfully',
-            Transaction: newCategory,
+            message: 'New item created successfully',
+            Item: newItem,
         });
     })
     .catch((error) => {
@@ -62,9 +67,9 @@ const CreateCategory = async (req, res) => {
     });
 }  
 
-const DeleteCategory = async (req, res) => {
+const DeleteItem = async (req, res) => {
     const id = req.params.ID;
-    Category.findByIdAndRemove(id)
+    Item.findByIdAndRemove(id)
     .exec()
     .then(()=> res.status(204).json({
         success: true,
@@ -74,16 +79,16 @@ const DeleteCategory = async (req, res) => {
     }));
 }
 
-const UpdateCategory = async (req, res) => {
+const UpdateItem = async (req, res) => {
     const id = req.params.ID;
     const updateObject = req.body;
-    Category.findByIdAndUpdate(id, updateObject)
+    Item.findByIdAndUpdate(id, updateObject)
     .exec()
     .then(() => {
         res.status(200).json({
             success: true,
-            message: 'Category is updated',
-            updateCategory: updateObject,
+            message: 'Item is updated',
+            updateItem: updateObject,
         });
     })
     .catch((err) => {
@@ -95,9 +100,9 @@ const UpdateCategory = async (req, res) => {
 }
 
 module.exports = {
-    GetCategory,
-    GetAllCategories,
-    CreateCategory,
-    DeleteCategory,
-    UpdateCategory,
+    GetItem,
+    GetAllItems,
+    CreateItem,
+    DeleteItem,
+    UpdateItem,
 };

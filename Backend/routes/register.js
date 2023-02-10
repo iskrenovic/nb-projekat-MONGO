@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const { CreateOwner,CreateBusiness,CreateFreelancer } = require('../controllers/registerController');
+const { CreateOwner,CreateCustomer } = require('../controllers/registerController');
 
 router.post('/createOwner',CreateOwner);     
-router.post('/createBusiness',CreateBusiness);
-router.post('/createFreelancer',CreateFreelancer);
+router.post('/createCustomer',CreateCustomer);
 
 module.exports = router;

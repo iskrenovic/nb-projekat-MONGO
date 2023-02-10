@@ -1,33 +1,33 @@
 const mongoose = require('mongoose');
-const Category = require('../models/categoryModel');
+const Transaction = require('../models/transactionModel');
 
-const GetCategory = async(req, res) => {
+const GetTransaction = async(req, res) => {
     const id = req.params.ID;
-    Category.findById(id)
-    .then((singleCategory) => {
+    Transaction.findById(id)
+    .then((singleTransaction) => {
         res.status(200).json({
             success: true,
-            message: `More on ${singleCategory.name}`,
-            Category: singleCategory,
+            message: `Successful`,
+            Transaction: singleTransaction,
         });
     })
     .catch((err) => {
         res.status(500).json({
             success: false,
-            message: 'This category does not exist',
+            message: 'This transaction does not exist',
             error: err.message,
         });
     });
 }
 
-const GetAllCategories = async(req,res) =>{
-    Category.find()
-    .select('name')
-    .then((allCategories) => {
+const GetAllTransactions = async(req,res) =>{
+    Transaction.find()
+    .select('dateBought paymentType deliveryType')
+    .then((allTransactions) => {
         return res.status(200).json({
             success: true,
-            message: 'A list of all categories',
-            Category: allCategories,
+            message: 'A list of all transactions',
+            Transaction: allTransactions,
         });
     })
     .catch((err) => {
@@ -39,18 +39,20 @@ const GetAllCategories = async(req,res) =>{
     });
 }
 
-const CreateCategory = async (req, res) => {
-    const category = new Category({
+const CreateTransaction = async (req, res) => {
+    const transaction = new Transaction({
         //_id: mongoose.Types.ObjectId(),
-        name: req.body.name,
+        dateBought: req.body.dateBought,
+        paymentType: req.body.paymentType,
+        deliveryType: req.body.deliveryType
     });
-    return category
+    return transaction
     .save()
-    .then((newCategory) => {
+    .then((newTransaction) => {
         return res.status(201).json({
             success: true,
-            message: 'New category created successfully',
-            Transaction: newCategory,
+            message: 'New transaction created successfully',
+            Transaction: newTransaction,
         });
     })
     .catch((error) => {
@@ -62,9 +64,9 @@ const CreateCategory = async (req, res) => {
     });
 }  
 
-const DeleteCategory = async (req, res) => {
+const DeleteTransaction = async (req, res) => {
     const id = req.params.ID;
-    Category.findByIdAndRemove(id)
+    Transaction.findByIdAndRemove(id)
     .exec()
     .then(()=> res.status(204).json({
         success: true,
@@ -74,16 +76,16 @@ const DeleteCategory = async (req, res) => {
     }));
 }
 
-const UpdateCategory = async (req, res) => {
+const UpdateTransaction = async (req, res) => {
     const id = req.params.ID;
     const updateObject = req.body;
-    Category.findByIdAndUpdate(id, updateObject)
+    Transaction.findByIdAndUpdate(id, updateObject)
     .exec()
     .then(() => {
         res.status(200).json({
             success: true,
-            message: 'Category is updated',
-            updateCategory: updateObject,
+            message: 'Transaction is updated',
+            updateTransaction: updateObject,
         });
     })
     .catch((err) => {
@@ -95,9 +97,9 @@ const UpdateCategory = async (req, res) => {
 }
 
 module.exports = {
-    GetCategory,
-    GetAllCategories,
-    CreateCategory,
-    DeleteCategory,
-    UpdateCategory,
+    GetTransaction,
+    GetAllTransactions,
+    CreateTransaction,
+    DeleteTransaction,
+    UpdateTransaction,
 };
