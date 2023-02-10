@@ -6,6 +6,7 @@ import LoginRegister from '@/pages/login-register.vue'
 // import SpacePage from '@/pages/space-page.vue'
 // import RoomPage from '@/pages/room-page.vue'
 import AdminDash from '@/pages/admin-dash.vue'
+import CategoryPage from "@/pages/category-page.vue"
 // import ReservationMsg from '@/pages/reservation-msg.vue'
 
 
@@ -24,6 +25,19 @@ const r = new Router({
             //     next()
             // }
         },        
+        {
+            path:'/',
+            name: 'CategoryPage',
+            component: CategoryPage,
+            // beforeEnter(to, from, next){
+            //     if(!Vue.$cookies.get('uId')){
+            //         next({name:'Login'});
+            //         return;
+            //     }
+            //     next()
+            // }
+        },        
+
         {
             path:'/login',
             name:'Login',

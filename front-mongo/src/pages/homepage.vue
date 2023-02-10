@@ -1,7 +1,7 @@
 <template>
     <div class="ui">
         <div class="top-bar">
-            <img /> <!--LOGO-->
+            <img src="@/assets/logo.png/"> <!--LOGO-->
             <h3 v-if="getUser">Welcome {{ getUser.username }}</h3>
             <button v-if="isAdmin" @click="openAdminDashboard">ADMIN DASHBOARD</button>
             <button @click="loginClick">{{(getUser?'LOGOUT':'LOGIN')}}</button>
@@ -37,9 +37,10 @@ export default defineComponent({
         //@D
         async searchBy(ime){
             
-            await this.$store.dispatch('getCategoriesByName', ime);
+           /* await this.$store.dispatch('getCategoriesByName', ime);
             this.filtering = true;
-            this.categories= this.$store.getters['getCategories'];
+            this.categories= this.$store.getters['getCategories']; */
+            this.categories= [ime];
         },
         loginClick(){
 
