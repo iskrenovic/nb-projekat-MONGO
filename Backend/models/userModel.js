@@ -1,7 +1,6 @@
 const  mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
-    //_id: mongoose.Schema.Types.ObjectId,
+const userSchema = new mongoose.Schema({    
     username: {        
         type: String,
         required: true,
@@ -28,7 +27,7 @@ const extend = (Schema, obj) => (
     )
 );
   
-const AdminSchema = extend(UserSchema,
+const AdminSchema = extend(userSchema,
 {
     firstname:{
         type: String
@@ -38,7 +37,7 @@ const AdminSchema = extend(UserSchema,
     }
 });
 
-const CustomerSchema = extend(UserSchema,
+const CustomerSchema = extend(userSchema,
 {
     firstname:{
         type: String

@@ -6,41 +6,24 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state:{
         user:null,
-        spaces:null,
-        spacesRecommended:null,
-        rooms:null,
-        seats:null,
-        equipment:null,
-        requests:null,
-        acceptedRequests:null,
-        request:null,
-        cities:null
+        categories:null,
+        items:null,
+        reviews:null,
+        transactions:null
     },
     getters:{
-        getSpaces(state){
-            return state.spaces;
+        getCategories(state){
+            return state.categories;
         },
-        getRecommendedSpaces(state){
-            return state.spacesRecommended;
+        getItems(state){
+            return state.items;
         },
-        getRooms(state){
-            return state.rooms;
+        getReviews(state){
+            return state.reviews;
         },
-        getEquipment(state){
-            return state.equipment;
-        },
-        getSeats(state){
-            return state.seats;
-        },
-        getRequests(state){
-            return state.requests;
-        },
-        getAcceptedRequests(state){
-            return state.acceptedRequests;
-        },
-        getUser(state){
-            return state.user;
-        }
+        getTransactions(state){
+            return state.transactions;
+        }        
     },
     actions:{
         async createAccount({commit}, account) {
@@ -353,208 +336,44 @@ export default new Vuex.Store({
             catch (err){
                 console.log(err);
             }  
-        },
-        async getPendingRequests({commit},id){
-            try{
-                let res = await Api().get(`api/reservation/getPendingReservationsByOwnerId/${id}`); 
-                if(res.status == 200){
-                    console.log("STIGLO", res.data);
-                    commit('setRequests', res.data);
-                }
-                else{
-                    console.error(res);
-                }
-            }
-            catch (err){
-                console.log(err);
-            }
-        },
-        
-        async getAcceptedRequests({commit},id){
-            try{
-                let res = await Api().get(`api/reservation/getAcceptedReservationByOwnerId/${id}`); 
-                if(res.status == 200){
-                    console.log("STIGLO", res.data);
-                    commit('setAcceptedRequests', res.data);
-                }
-                else{
-                    console.error(res);
-                }
-            }
-            catch (err){
-                console.log(err);
-            }
-        },
-        async getRequestById({commit},req){
-            try{
-                let res = await Api().get(`api/reservation/getReservation/${req.id}`); 
-                if(res.status == 200){
-                    commit('setRequest', res.data);
-                    req.callback(res.data.status);
-                }
-                else{
-                    console.error(res);
-                    req.callback(false)
-                }
-            }
-            catch (err){
-                console.log(err);
-            }
-        },
-        async acceptRequest({commit}, id) {
-            return await Api().put(`/api/reservation/acceptReservation/${id}`).then(res=>{  
-                if(res.status == 200){
-                    commit('removeRequest', id);
-                    //commit('setRequest', res.data);
-                }
-                else{
-                    console.error(res);
-                }
-            })
-        },
-        async denyRequest({commit}, id) {
-            return await Api().put(`/api/reservation/denyReservation/${id}`).then(res=>{  
-                if(res.status == 200){
-                    commit('removeRequest', id);
-                }
-                else{
-                    console.error(res);
-                }
-            })
-        },
-        async addRequestAsBusiness({commit}, request) {
-            return await Api().post('/api/reservation/createReservationAsBusiness/', request.reservation).then(res=>{ 
-                if(res.status == 200){
-                    commit('setRequest', res.data);
-                    request.callback(res.data.ID);
-                }
-                else{
-                    console.error(res);
-                    request.callback(false);
-                }
-            })
-        },
-        async addRequestAsFreelancer({commit}, request) {
-            return await Api().post('/api/reservation/createReservationAsFreelancer/', request.reservation).then(res=>{ 
-                if(res.status == 200){
-                    console.log(res.data);
-                    commit('setRequest', res.data);
-                    request.callback(res.data.ID);
-                }
-                else{
-                    console.error(res);
-                    request.callback(false);
-                }
-            })
-        },
-        async deleteRequest({commit}, id){
-            try{
-                let res = await Api().delete(`api/restaraunt-bar/article/deleteArticle/${id}`);  //TODO
-                if(res.status == 200)
-                    commit('removeRequest', id);
-                else
-                    console.error(res);
-            }
-            catch (err){
-                console.log(err);
-            }
-        },        
+        }       
         
     },
     mutations:{
-        setCities(state, cities){
-            state.cities = cities;
+        setCategories(state, categories){
+            state.categories = categories;
         },
         setUser(state, user){
             state.user = user;
         },
-        setSpaces(state, spaces){
-            state.spaces = spaces;
+        setItems(state, items){
+            state.items = items;
+        },        
+        addNewItem(state, item){
+            if(!state.items) state.items = []
+            state.items.push(item);
         },
-        setRecommendedSpaces(state, spaces){
-            state.spacesRecommended = spaces;
-        },
-        addNewSpace(state, space){
-            if(!state.spaces) state.spaces = []
-            state.spaces.push(space);
-        },
-        removeSpace(state, id){
-            state.spaces = state.spaces.filter(p=>p.ID != id);
+        removeItem(state, id){
+            state.items = state.items.filter(p=>p._id != id);
         },
 
-        setRooms(state, rooms){
-            state.rooms = rooms;
+        setReviews(state, reviews){
+            state.reviews = reviews;
         },
-        addNewRoom(state, room){
-            if(!state.rooms) state.rooms = []
-            state.rooms.push(room);
+        addNewReviews(state, review){
+            if(!state.reviews) state.reviews = []
+            state.reviews.push(review);
         },
-        removeRoom(state, id){
-            state.rooms = state.rooms.filter(p=>p.ID != id);
+        removeReviews(state, id){
+            state.reviews = state.reviews.filter(p=>p._id != id);
         },
 
-        setEquipment(state, equipment){
-            state.equipment = equipment;
+        setTransactions(state, transactions){
+            state.transactions = transactions;
         },
-        addEquipment(state, equipment){
-            if(!state.equipment) state.equipment = []
-            state.equipment.push(equipment);
-        },
-        removeEquipment(state, id){
-            state.equipments = state.equipments.filter(p=>p.ID != id);
-        },
-        setSeats(state, seat){
-            state.seats = seat;
-        },
-        addSeat(state, seat){
-            if(!state.seats) state.seats = []
-            state.seats.push(seat);
-        },
-        removeSeat(state, id){
-            state.seats = state.seats.filter(p=>p.ID != id);
-        },
-        setRequests(state, requests){
-            state.requests = [];
-            requests.forEach(r=>{                
-                state.requests.push({
-                    ID:r.ID,
-                    dateStart: new Date(r.dateStart.year.low,r.dateStart.month.low, r.dateStart.day.low,0,0,0,0),
-                    dateEnd: new Date(r.dateEnd.year.low,r.dateEnd.month.low, r.dateEnd.day.low,0,0,0,0)
-                });
-            })
-        }, 
-        setAcceptedRequests(state, requests){
-            state.acceptedRequests = [];
-            requests.forEach(r=>{                
-                state.acceptedRequests.push({
-                    ID:r.ID,
-                    dateStart: new Date(r.dateStart.year.low,r.dateStart.month.low, r.dateStart.day.low,0,0,0,0),
-                    dateEnd: new Date(r.dateEnd.year.low,r.dateEnd.month.low, r.dateEnd.day.low,0,0,0,0)
-                });
-            })
-        },         
-        setRequest(state, request){
-            state.request = request; 
-        },  
-        removeRequest(state, id){
-            state.requests = state.requests.filter(p=>p.ID != id);
-        },
-        addRequest(state, req){
-            console.log(req);
-            if(!state.requests) state.requests = [];
-            state.requests.push({
-                ID:req.ID,
-                dateStart: new Date(req.dateStart.year.low,req.dateStart.month.low, req.dateStart.day.low,0,0,0,0),
-                dateEnd: new Date(req.dateEnd.year.low,req.dateEnd.month.low, req.dateEnd.day.low,0,0,0,0)
-            });
-        },
-        addAcceptedRequest(state, req){
-            if(!state.acceptedRequests) state.acceptedRequests = [];
-            state.acceptedRequests.push({
-                ID:req.ID,
-                dateStart: new Date(req.dateStart.year.low,req.dateStart.month.low, req.dateStart.day.low,0,0,0,0),
-                dateEnd: new Date(req.dateEnd.year.low,req.dateEnd.month.low, req.dateEnd.day.low,0,0,0,0)
-            });
-        }
+        addTransactions(state, transaction){
+            if(!state.transactions) state.transactions = []
+            state.transactions.push(transaction);
+        }        
     }
 })
