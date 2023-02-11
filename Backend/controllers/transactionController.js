@@ -44,7 +44,9 @@ const CreateTransaction = async (req, res) => {
         //_id: mongoose.Types.ObjectId(),
         dateBought: req.body.dateBought,
         paymentType: req.body.paymentType,
-        deliveryType: req.body.deliveryType
+        deliveryType: req.body.deliveryType,
+        userID: req.body.userID,
+        itemID: req.body.itemID
     });
     return transaction
     .save()
@@ -96,10 +98,52 @@ const UpdateTransaction = async (req, res) => {
     });
 }
 
+const GetTransactionsByItemId = async (req,res) => {
+    const id = req.params.itemID; 
+    Transaction.find({"itemID": {_id:id}})
+    .select('dateBought paymentType deliveryType')
+    .then((allTransactions) => {
+        return res.status(200).json({
+            success: true,
+            message: 'A list of all transactions for item',
+            Transaction: allTransactions,
+        });
+    })
+    .catch((err) => {
+        res.status(500).json({
+            success: false,
+            message: 'Server error. Please try again.',
+            error: err.message,
+        });
+    });
+}
+
+const GetTransactionsByUserId = async (req,res) => {
+    const id = req.params.userID; 
+    Transaction.find({"userID": {_id:id}})
+    .select('dateBought paymentType deliveryType')
+    .then((allTransactions) => {
+        return res.status(200).json({
+            success: true,
+            message: 'A list of all transactions by user',
+            Transaction: allTransactions,
+        });
+    })
+    .catch((err) => {
+        res.status(500).json({
+            success: false,
+            message: 'Server error. Please try again.',
+            error: err.message,
+        });
+    });
+}
+
 module.exports = {
     GetTransaction,
     GetAllTransactions,
     CreateTransaction,
     DeleteTransaction,
     UpdateTransaction,
+    GetTransactionsByItemId,
+    GetTransactionsByUserId
 };

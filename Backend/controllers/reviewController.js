@@ -44,6 +44,8 @@ const CreateReview = async (req, res) => {
         //_id: mongoose.Types.ObjectId(),
         grade: req.body.grade,
         comment: req.body.comment,
+        itemID: req.body.itemID,
+        userID: req.body.userID
     });
     return review
     .save()
@@ -95,10 +97,52 @@ const UpdateReview = async (req, res) => {
     });
 }
 
+const GetReviewsByUserId = async (req,res) => {
+    const id = req.params.userID; 
+    Review.find({"userID": {_id:id}})
+    .select('grade comment')
+    .then((allReviews) => {
+        return res.status(200).json({
+            success: true,
+            message: 'A list of all reviews by user',
+            Review: allReviews,
+        });
+    })
+    .catch((err) => {
+        res.status(500).json({
+            success: false,
+            message: 'Server error. Please try again.',
+            error: err.message,
+        });
+    });
+}
+
+const GetReviewsByItemId = async (req,res) => {
+    const id = req.params.itemID; 
+    Review.find({"itemID": {_id:id}})
+    .select('grade comment')
+    .then((allReviews) => {
+        return res.status(200).json({
+            success: true,
+            message: 'A list of all reviews for item',
+            Review: allReviews,
+        });
+    })
+    .catch((err) => {
+        res.status(500).json({
+            success: false,
+            message: 'Server error. Please try again.',
+            error: err.message,
+        });
+    });
+}
+
 module.exports = {
     GetReview,
     GetAllReviews,
     CreateReview,
     DeleteReview,
     UpdateReview,
+    GetReviewsByUserId,
+    GetReviewsByItemId
 };

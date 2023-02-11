@@ -27,10 +27,10 @@ const itemSchema = new mongoose.Schema({
         type: [String],
         required: true,
     },
-    /*categoryID: {
+    categoryID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category"
-    }*/
+    }
 });
 
 module.exports = mongoose.model('Item',itemSchema)

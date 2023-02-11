@@ -47,7 +47,8 @@ const CreateItem = async (req, res) => {
         count: req.body.count,
         price: req.body.price,
         gender: req.body.gender,
-        tags: req.body.tags
+        tags: req.body.tags,
+        categoryID: req.body.categoryID
     });
     return item
     .save()
@@ -99,9 +100,9 @@ const UpdateItem = async (req, res) => {
     });
 }
 
-/*const GetItemsByCategoryId = async (req,res) => {
+const GetItemsByCategoryId = async (req,res) => {
     const id = req.params.categoryID; 
-    Item.find({"categoryID": {_id:categoryID}})
+    Item.find({"categoryID": {_id:id}})
     .select('name brand count price gender tags')
     .then((allItems) => {
         return res.status(200).json({
@@ -117,7 +118,47 @@ const UpdateItem = async (req, res) => {
             error: err.message,
         });
     });
-}*/
+}
+
+const GetItemsByGender = async (req,res) => {
+    const gender = req.params.gender; 
+    Item.find({"gender": gender})
+    .select('name brand count price gender tags')
+    .then((allItems) => {
+        return res.status(200).json({
+            success: true,
+            message: 'A list of all items for gender',
+            Item: allItems,
+        });
+    })
+    .catch((err) => {
+        res.status(500).json({
+            success: false,
+            message: 'Server error. Please try again.',
+            error: err.message,
+        });
+    });
+}
+
+const GetItemsByTags = async (req,res) => {
+    const tags = req.params.tags; 
+    Item.find({"tags": tags})
+    .select('name brand count price gender tags')
+    .then((allItems) => {
+        return res.status(200).json({
+            success: true,
+            message: 'A list of all items for tags',
+            Item: allItems,
+        });
+    })
+    .catch((err) => {
+        res.status(500).json({
+            success: false,
+            message: 'Server error. Please try again.',
+            error: err.message,
+        });
+    });
+}
 
 module.exports = {
     GetItem,
@@ -125,5 +166,7 @@ module.exports = {
     CreateItem,
     DeleteItem,
     UpdateItem,
-    //GetItemsByCategoryId
+    GetItemsByCategoryId,
+    GetItemsByGender,
+    GetItemsByTags
 };

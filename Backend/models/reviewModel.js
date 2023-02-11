@@ -9,14 +9,14 @@ const reviewSchema = new mongoose.Schema({
     comment:{
         type: String
     },
-    /*itemID: {
+    itemID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Item"
     },
     userID: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "CateUsergory"
-    }*/
+        ref: "User"
+    }
 });
 
 module.exports = mongoose.model('Review',reviewSchema)
