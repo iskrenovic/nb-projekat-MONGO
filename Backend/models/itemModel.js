@@ -1,4 +1,5 @@
 const  mongoose = require('mongoose');
+//const Category = require('../models/categoryModel');
 
 const itemSchema = new mongoose.Schema({
     //_id: mongoose.Schema.Types.ObjectId,
@@ -25,7 +26,11 @@ const itemSchema = new mongoose.Schema({
     tags: {
         type: [String],
         required: true,
-    }
+    },
+    /*categoryID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Category"
+    }*/
 });
 
 module.exports = mongoose.model('Item',itemSchema)

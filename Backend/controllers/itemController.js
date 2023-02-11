@@ -99,10 +99,31 @@ const UpdateItem = async (req, res) => {
     });
 }
 
+/*const GetItemsByCategoryId = async (req,res) => {
+    const id = req.params.categoryID; 
+    Item.find({"categoryID": {_id:categoryID}})
+    .select('name brand count price gender tags')
+    .then((allItems) => {
+        return res.status(200).json({
+            success: true,
+            message: 'A list of all items in category',
+            Item: allItems,
+        });
+    })
+    .catch((err) => {
+        res.status(500).json({
+            success: false,
+            message: 'Server error. Please try again.',
+            error: err.message,
+        });
+    });
+}*/
+
 module.exports = {
     GetItem,
     GetAllItems,
     CreateItem,
     DeleteItem,
     UpdateItem,
+    //GetItemsByCategoryId
 };

@@ -13,7 +13,15 @@ const transactionSchema = new mongoose.Schema({
     deliveryType:{
         type: String,
         required:true
-    }    
+    },
+    /*userID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
+    itemID: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "Item"
+    }*/    
 });
 
 module.exports = mongoose.model('Transaction',transactionSchema)

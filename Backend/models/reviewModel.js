@@ -8,7 +8,15 @@ const reviewSchema = new mongoose.Schema({
     },
     comment:{
         type: String
-    }
+    },
+    /*itemID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Item"
+    },
+    userID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CateUsergory"
+    }*/
 });
 
 module.exports = mongoose.model('Review',reviewSchema)
