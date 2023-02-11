@@ -99,7 +99,7 @@ const UpdateReview = async (req, res) => {
 
 const GetReviewsByUserId = async (req,res) => {
     const id = req.params.userID; 
-    Review.find({"userID": {_id:id}})
+    Review.find({"userID": id})
     .select('grade comment')
     .then((allReviews) => {
         return res.status(200).json({
@@ -119,7 +119,7 @@ const GetReviewsByUserId = async (req,res) => {
 
 const GetReviewsByItemId = async (req,res) => {
     const id = req.params.itemID; 
-    Review.find({"itemID": {_id:id}})
+    Review.find({"itemID": id})
     .select('grade comment')
     .then((allReviews) => {
         return res.status(200).json({

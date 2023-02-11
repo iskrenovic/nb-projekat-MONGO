@@ -100,7 +100,7 @@ const UpdateTransaction = async (req, res) => {
 
 const GetTransactionsByItemId = async (req,res) => {
     const id = req.params.itemID; 
-    Transaction.find({"itemID": {_id:id}})
+    Transaction.find({"itemID": id})
     .select('dateBought paymentType deliveryType')
     .then((allTransactions) => {
         return res.status(200).json({
@@ -120,7 +120,7 @@ const GetTransactionsByItemId = async (req,res) => {
 
 const GetTransactionsByUserId = async (req,res) => {
     const id = req.params.userID; 
-    Transaction.find({"userID": {_id:id}})
+    Transaction.find({"userID": id})
     .select('dateBought paymentType deliveryType')
     .then((allTransactions) => {
         return res.status(200).json({
