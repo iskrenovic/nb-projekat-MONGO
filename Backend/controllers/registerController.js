@@ -16,9 +16,8 @@ const CreateOwner = async (req,res) => {
     //Sve šifre obavezo heširamo kako se ne bi čuvale u svom normalnom stanju i ne bi bile sigurnosni rizik
     bcrypt.hash(req.body.password, saltRounds).then(hash => {
         const owner = new User({
-            //_id: mongoose.Types.ObjectId(),
             username: req.body.username,
-            password: req.body.password,
+            password: hash,
             role: req.body.role,
             email: req.body.email,
             address: req.body.address,
@@ -79,8 +78,8 @@ const CreateCustomer = async (req,res) => {
 }
 //Proveravamo da nije neki username zauzet za svaki slučaj
 const usernameTaken = async (username, email) => {
-    let resp = await neo4j.cypher(`match (user:User) where user.username = "${username}" OR user.email = "${email}" return user;`);
-    return resp.records.length > 0;
+    let users = await User.find({username:username, email:email});
+    return users.length>0;
 }
 
 module.exports = {
