@@ -43,7 +43,7 @@ const CreateItem = async (req, res) => {
         tags: req.body.tags,
         categoryID: req.body.categoryID
     };
-    Item.create(item).then((newItem) => {
+    Item.create(item).then(newItem => {
         res.status(200).send(itemToDTO(newItem));
     })
     .catch((error) => {
@@ -103,7 +103,7 @@ const GetItemsByTags = async (req,res) => {
     Item.find({"tags": tags})
     .select('name brand count price gender tags')
     .then((allItems) => {
-        return res.status(200).send(allItems);
+        res.status(200).send(allItems);
     })
     .catch((err) => {
         res.status(500).send(err);
