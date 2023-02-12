@@ -3,13 +3,14 @@ const Transaction = require('../models/transactionModel');
 
 const GetTransaction = async(req, res) => {
     const id = req.params.ID;
+    if(!id || id == "null"){
+        console.log("NIJE ID");
+        await res.status(400).send("INVALID ID");
+        return;
+    }
     Transaction.findById(id)
     .then((singleTransaction) => {
-        res.status(200).json({
-            success: true,
-            message: `Successful`,
-            Transaction: singleTransaction,
-        });
+        res.status(200).send();
     })
     .catch((err) => {
         res.status(500).json({
