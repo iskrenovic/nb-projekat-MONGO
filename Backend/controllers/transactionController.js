@@ -27,45 +27,26 @@ const GetAllTransactions = async(req,res) =>{
     Transaction.find()
     .select('dateBought paymentType deliveryType')
     .then((allTransactions) => {
-        return res.status(200).json({
-            success: true,
-            message: 'A list of all transactions',
-            Transaction: allTransactions,
-        });
+        res.status(200).send(allTransactions);
     })
     .catch((err) => {
-        res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again.',
-            error: err.message,
-        });
+        res.status(500).send(err);
     });
 }
 
 const CreateTransaction = async (req, res) => {
-    const transaction = new Transaction({
-        //_id: mongoose.Types.ObjectId(),
+    let transaction = {
         dateBought: req.body.dateBought,
         paymentType: req.body.paymentType,
         deliveryType: req.body.deliveryType,
         userID: req.body.userID,
         itemID: req.body.itemID
-    });
-    return transaction
-    .save()
-    .then((newTransaction) => {
-        return res.status(201).json({
-            success: true,
-            message: 'New transaction created successfully',
-            Transaction: newTransaction,
-        });
+    };
+    Transaction.create(transaction).then(newTransaction => {
+        res.status(200).send(transactionToDTO(newTransaction));
     })
     .catch((error) => {
-        res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again.',
-            error: error.message,
-        });
+        res.status(500).send(error);
     });
 }  
 
@@ -73,12 +54,10 @@ const DeleteTransaction = async (req, res) => {
     const id = req.params.ID;
     Transaction.findByIdAndRemove(id)
     .exec()
-    .then(()=> res.status(204).json({
+    .then(()=> res.status(200).send({
         success: true,
     }))
-    .catch((err) => res.status(500).json({
-        success: false,
-    }));
+    .catch((err) => res.status(500).send(err));
 }
 
 const UpdateTransaction = async (req, res) => {
@@ -87,17 +66,10 @@ const UpdateTransaction = async (req, res) => {
     Transaction.findByIdAndUpdate(id, updateObject)
     .exec()
     .then(() => {
-        res.status(200).json({
-            success: true,
-            message: 'Transaction is updated',
-            updateTransaction: updateObject,
-        });
+        res.status(200).send(updateObject);
     })
     .catch((err) => {
-        res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again.'
-        });
+        res.status(500).send(err);
     });
 }
 
@@ -106,18 +78,10 @@ const GetTransactionsByItemId = async (req,res) => {
     Transaction.find({"itemID": id})
     .select('dateBought paymentType deliveryType')
     .then((allTransactions) => {
-        return res.status(200).json({
-            success: true,
-            message: 'A list of all transactions for item',
-            Transaction: allTransactions,
-        });
+        res.status(200).send(allTransactions);
     })
     .catch((err) => {
-        res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again.',
-            error: err.message,
-        });
+        res.status(500).send(err);
     });
 }
 
@@ -126,18 +90,10 @@ const GetTransactionsByUserId = async (req,res) => {
     Transaction.find({"userID": id})
     .select('dateBought paymentType deliveryType')
     .then((allTransactions) => {
-        return res.status(200).json({
-            success: true,
-            message: 'A list of all transactions by user',
-            Transaction: allTransactions,
-        });
+        res.status(200).send(allTransactions);
     })
     .catch((err) => {
-        res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again.',
-            error: err.message,
-        });
+        res.status(500).send(err);
     });
 }
 

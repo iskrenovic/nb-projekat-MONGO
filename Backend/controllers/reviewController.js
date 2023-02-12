@@ -1,18 +1,20 @@
 const mongoose = require('mongoose');
 const Review = require('../models/reviewModel');
+const {reviewToDTO} = require('../dto_handler')
 
 const GetReview = async(req, res) => {
     const id = req.params.ID;
+    if(!id || id == "null"){
+        console.log("NIJE ID");
+        await res.status(400).send("INVALID ID");
+        return;
+    }
     Review.findById(id)
     .then((singleReview) => {
-        res.status(200).json({
-            success: true,
-            message: `Successful`,
-            Review: singleReview,
-        });
+        res.status(200).send(reviewToDTO(singleReview));
     })
     .catch((err) => {
-        res.status(500).json({
+        res.status(400).send({
             success: false,
             message: 'This review does not exist',
             error: err.message,
@@ -24,44 +26,25 @@ const GetAllReviews = async(req,res) =>{
     Review.find()
     .select('grade comment')
     .then((allReviews) => {
-        return res.status(200).json({
-            success: true,
-            message: 'A list of all reviews',
-            Review: allReviews,
-        });
+        res.status(200).send(allReviews);
     })
     .catch((err) => {
-        res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again.',
-            error: err.message,
-        });
+        res.status(500).send(err);
     });
 }
 
 const CreateReview = async (req, res) => {
-    const review = new Review({
-        //_id: mongoose.Types.ObjectId(),
+    let review = {
         grade: req.body.grade,
         comment: req.body.comment,
         itemID: req.body.itemID,
         userID: req.body.userID
-    });
-    return review
-    .save()
-    .then((newReview) => {
-        return res.status(201).json({
-            success: true,
-            message: 'New review created successfully',
-            Review: newReview,
-        });
+    };
+    Review.create(review).then(newReview => {
+        res.status(200).send(reviewToDTO(newReview));
     })
     .catch((error) => {
-        res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again.',
-            error: error.message,
-        });
+        res.status(500).send(error);
     });
 }  
 
@@ -69,12 +52,10 @@ const DeleteReview = async (req, res) => {
     const id = req.params.ID;
     Review.findByIdAndRemove(id)
     .exec()
-    .then(()=> res.status(204).json({
+    .then(()=> res.status(200).send({
         success: true,
     }))
-    .catch((err) => res.status(500).json({
-        success: false,
-    }));
+    .catch((err) => res.status(500).send(err));
 }
 
 const UpdateReview = async (req, res) => {
@@ -83,17 +64,10 @@ const UpdateReview = async (req, res) => {
     Review.findByIdAndUpdate(id, updateObject)
     .exec()
     .then(() => {
-        res.status(200).json({
-            success: true,
-            message: 'Review is updated',
-            updateReview: updateObject,
-        });
+        res.status(200).send(updateObject);
     })
     .catch((err) => {
-        res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again.'
-        });
+        res.status(500).send(err);
     });
 }
 
@@ -102,18 +76,10 @@ const GetReviewsByUserId = async (req,res) => {
     Review.find({"userID": id})
     .select('grade comment')
     .then((allReviews) => {
-        return res.status(200).json({
-            success: true,
-            message: 'A list of all reviews by user',
-            Review: allReviews,
-        });
+        res.status(200).send(allReviews);
     })
     .catch((err) => {
-        res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again.',
-            error: err.message,
-        });
+        res.status(500).send(err);
     });
 }
 
@@ -122,18 +88,10 @@ const GetReviewsByItemId = async (req,res) => {
     Review.find({"itemID": id})
     .select('grade comment')
     .then((allReviews) => {
-        return res.status(200).json({
-            success: true,
-            message: 'A list of all reviews for item',
-            Review: allReviews,
-        });
+        return res.status(200).send(allReviews);
     })
     .catch((err) => {
-        res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again.',
-            error: err.message,
-        });
+        res.status(500).send(err);
     });
 }
 
