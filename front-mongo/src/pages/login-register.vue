@@ -76,7 +76,7 @@ export default defineComponent({
                 }
                 
                 //@D
-                /*
+                
                 await this.$store.dispatch('createAccount',{                    
                     username:this.username,
                     password:this.password,
@@ -90,7 +90,7 @@ export default defineComponent({
                             this.$router.push({name:'Homepage'});
                     }
                 })
-                */
+                
             }            
         }
     }

@@ -23,10 +23,13 @@ export default new Vuex.Store({
         },
         getTransactions(state){
             return state.transactions;
+        },
+        getUser(state){
+            return state.user;
         }        
     },
     actions:{
-        async createAccount({commit}, account) {
+       /* async createAccount({commit}, account) {
             let url = "";
             switch(account.role){
                 case 'owner':
@@ -52,7 +55,7 @@ export default new Vuex.Store({
             }).catch(err=>{
                 console.error(err);
             })
-        },
+        }, */
         async login({commit}, req){
             return await Api().post('/api/login/', req.user).then(res=>{
                 if(res.status == 200){
@@ -96,60 +99,8 @@ export default new Vuex.Store({
                 console.log(err);
             }
         },
-        async getSpaces(){
-            try{
-                let res = await Api().get(`api/space/business/getAllbusinesses/`);
-                console.log(res.data);
-            }
-            catch (err){
-                console.log(err);
-            }
-        },
-        //@DIMI
-        async getSpacesByCity({commit}, city){
-            try{
-                let res = await Api().get(`api/space/getSpacesByCity/${city}`);
-                if(res.status==200){
-                    commit('setSpaces', res.data);
-                }
-                else{
-                    console.error(res);
-                }
-            }
-            catch(err){
-                console.log(err);
-            }
-        },
-        async get10Spaces({commit}){
-            try{
-                let res = await Api().get(`api/space/get10Spaces/`);
-                if(res.status==200){
-                    commit('setSpaces', res.data);
-                }
-                else{
-                    console.error(res);
-                }
-            }
-            catch(err){
-                console.log(err);
-            }
-        },
-        async getCities({commit}, callback){
-            try{
-                let res = await Api().get(`api/space/getCities/`);
-                if(res.status==200){
-                    commit('setCities', res.data);
-                    callback(res.data);
-                }
-                else{
-                    console.error(res);
-                }
-            }
-            catch(err){
-                console.log(err);
-            }
-        },
-        async getRecommendedSpacesFreelancer({commit}, req){
+       
+        /*async getRecommendedSpacesFreelancer({commit}, req){
             try{
                 let res = await Api().get(`api/space/getRecomendedSpaceFreelancer/${req.city}/${req.userID}`);
                 if(res.status==200){
@@ -176,30 +127,8 @@ export default new Vuex.Store({
             catch(err){
                 console.log(err);
             }
-        },
-        async addSpace({commit}, space) {
-            return await Api().post('/api/space/createSpace', space).then(res=>{
-                if(res.status == 200){
-                    commit('addNewSpace', res.data);
-                }
-                else{
-                    console.error(res);
-                }
-            })
-        },
-        async deleteSpace({commit}, id){
-            try{
-                let res = await Api().delete(`api/space/deleteSpace/${id}`);
-                if(res.status == 200)
-                    commit('removeSpace', id);
-                else
-                    console.error(res);
-            }
-            catch (err){
-                console.log(err);
-            }  
-        },
-        async getSpacesByUserId({commit}, req){
+        }, */
+        /* async getSpacesByUserId({commit}, req){
             try{
                 let res = await Api().get(`api/space/getSpaceByOwnerId/${req.userID}`);
                 if(res.status == 200){
@@ -229,85 +158,114 @@ export default new Vuex.Store({
             catch (err){
                 console.error(err);
             }
-        },
-        async addRoom({commit}, room) {
-            return await Api().post('/api/room/createRoom/', room).then(res=>{
-                if(res.status == 200){
-                    commit('addNewRoom', res.data);
-                }
-                else{
-                    console.error(res);
-                }
-            })
-        },
-        async deleteRoom({commit}, id){
+        }, */
+
+        //  C A T E G O R Y
+
+        async getCategories({commit}){
             try{
-                let res = await Api().delete(`api/room/deleteRoom/${id}`);
-                if(res.status == 200)
-                    commit('removeRoom', id);
-                else
-                    console.error(res);
-            }
-            catch (err){
-                console.log(err);
-            }  
-        },
-        async getEquipment({commit}, id){
-            try{
-                let res = await Api().get(`api/equipment/getEquipment/${id}`);
-                if(res.status == 200){
-                    commit('setEquipment',res.data);
-                }
-                else{
-                    console.error(res.data);
-                }
-            }
-            catch (err){
-                console.log(err);
-            }
-        },
-        async getEquipmentByUserId({commit}, id){
-            try{
-                let res = await Api().get(`api/equipment/getEquipmentBySpaceId/${id}`);
-                if(res.status == 200){
-                    commit('setEquipment',res.data);
-                }
-                else{
-                    console.error(res.data);
-                }
-                console.log(res.data);
-            }
-            catch (err){
-                console.log(err);
-            }
-        },
-        async addEquipment(commit, equipment) {
-            return await Api().post('/api/equipment/createEquipment/', equipment).then(res=>{
-                if(res.status == 200){
-                    commit('addEquipment', res.data);
-                }
-                else{
-                    console.error(res);
-                }
-            })
-        },
-        async deleteEquipment(commit, id){
-            try{
-                let res = await Api().delete(`api/equipment/article/deleteArticle/${id}`);
-                if(res.status == 200)
-                    commit('removeEquipment', id);
-                else
-                    console.error(res);
-            }
-            catch (err){
-                console.log(err);
-            }  
-        },
-        async getSeatsByRoomId({commit}, id){
-            try{
-                let res = await Api().get(`api/place/getPlacesByRoomId/${id}`);
+                let res = await Api().get(`api/category/getAllCategories/`);
                 if(res.status==200){
-                    commit('setSeats', res.data);
+                    commit('setCategories', res.data);
+                }
+            }
+            catch (err){
+                console.log(err);
+            }
+        },
+        async getCategory({commit}, id){
+            try{
+                let res = await Api().get(`api/category/getCategory/${id}`);
+                if(res.status==200){
+                    commit('setCategories', res.data);
+                }
+                else{
+                    console.error(res);
+                }
+            }
+            catch(err){
+                console.log(err);
+            }
+        },
+        async addCategory({commit}, category) {
+            return await Api().post('/api/category/createCategory', category).then(res=>{
+                if(res.status == 200){
+                    commit('addNewCategory', res.data);
+                }
+                else{
+                    console.error(res);
+                }
+            })
+        },
+        async deleteCategory({commit}, id){
+            try{
+                let res = await Api().delete(`api/category/deleteCategory/${id}`);
+                if(res.status == 200)
+                    commit('removeCategory', id);
+                else
+                    console.error(res);
+            }
+            catch (err){
+                console.log(err);
+            }  
+        },
+       
+        // I T E M S 
+        async addItem({commit}, item) {
+            return await Api().post('/api/item/createItem/', item).then(res=>{
+                if(res.status == 200){
+                    commit('addNewItem', res.data);
+                }
+                else{
+                    console.error(res);
+                }
+            })
+        },
+        async deleteItem({commit}, id){
+            try{
+                let res = await Api().delete(`api/item/deleteItem/${id}`);
+                if(res.status == 200)
+                    commit('removeItem', id);
+                else
+                    console.error(res);
+            }
+            catch (err){
+                console.log(err);
+            }  
+        },
+        async getItems({commit}){
+            try{
+                let res = await Api().get(`api/item/getAllItems/`);
+                if(res.status==200){
+                    commit('setItems', res.data);
+                }
+            }
+            catch (err){
+                console.log(err);
+            }
+        },
+        async getItem({commit}, id){
+            try{
+                let res = await Api().get(`api/item/getItem/${id}`);
+                if(res.status == 200){
+                    commit('setItem',res.data);
+                }
+                else{
+                    console.error(res.data);
+                }
+            }
+            catch (err){
+                console.log(err);
+            }
+        },
+        async getItemsByCategoryId({commit}, id){
+            try{
+                let res = await Api().get(`api/item/getItemsByCategoryId/${id}`);
+                if(res.status == 200){
+                    commit('setItems',res.data);
+                }
+                else{
+                    console.error(res.data);
                 }
                 console.log(res.data);
             }
@@ -315,29 +273,36 @@ export default new Vuex.Store({
                 console.log(err);
             }
         },
-        async addSeat({commit}, seat) {
-            return await Api().post('/api/place/createPlace', seat).then(res=>{
+        async getItemsByGender({commit}, gender){
+            try{
+                let res = await Api().get(`api/item/getItemsByGender/${gender}`);
                 if(res.status == 200){
-                    commit('addSeat', res.data);
+                    commit('setItems',res.data);
                 }
                 else{
-                    console.error(res);
+                    console.error(res.data);
                 }
-            })
-        },
-        async deleteSeat({commit}, id){
-            try{
-                let res = await Api().delete(`api/place/article/deleteArticle/${id}`);
-                if(res.status == 200)
-                    commit('removeSeat', id);
-                else
-                    console.error(res);
+                console.log(res.data);
             }
             catch (err){
                 console.log(err);
-            }  
-        }       
-        
+            }
+        },
+        async getItemsByTags({commit}, tags){
+            try{
+                let res = await Api().get(`api/item/getItemsByTags/${tags}`);
+                if(res.status == 200){
+                    commit('setItems',res.data);
+                }
+                else{
+                    console.error(res.data);
+                }
+                console.log(res.data);
+            }
+            catch (err){
+                console.log(err);
+            }
+        },
     },
     mutations:{
         setCategories(state, categories){
@@ -353,10 +318,16 @@ export default new Vuex.Store({
             if(!state.items) state.items = []
             state.items.push(item);
         },
+        addNewCategory(state, category){
+            if(!state.categories) state.categories = []
+            state.categories.push(category);
+        },
         removeItem(state, id){
             state.items = state.items.filter(p=>p._id != id);
         },
-
+        removeCategory(state, id){
+            state.categories = state.categories.filter(p=>p._id != id);
+        },
         setReviews(state, reviews){
             state.reviews = reviews;
         },

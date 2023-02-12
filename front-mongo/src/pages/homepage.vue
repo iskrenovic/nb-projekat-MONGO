@@ -37,7 +37,7 @@ export default defineComponent({
         //@D
         async searchBy(ime){
             
-           /* await this.$store.dispatch('getCategoriesByName', ime);
+           /* await this.$store.dispatch('getCategoryByName', ime);
             this.filtering = true;
             this.categories= this.$store.getters['getCategories']; */
             this.categories= [ime];
@@ -72,7 +72,7 @@ export default defineComponent({
             await this.$store.dispatch('getUser', this.$cookies.get('uId'));
             this.user = this.$store.getters['getUser'];
         } 
-        await this.$store.dispatch('get10Categories');        
+        await this.$store.dispatch('getCategories');        
         this.categories = this.$store.getters['getCategories'];        
     }
 })
