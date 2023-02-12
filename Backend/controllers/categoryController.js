@@ -1,18 +1,20 @@
 const mongoose = require('mongoose');
 const Category = require('../models/categoryModel');
+const {categoryToDTO} = require('../dto_handler')
 
 const GetCategory = async(req, res) => {
     const id = req.params.ID;
+    if(!id || id == "null"){
+        console.log("NIJE ID");
+        await res.status(400).send("INVALID ID");
+        return;
+    }
     Category.findById(id)
     .then((singleCategory) => {
-        res.status(200).json({
-            success: true,
-            message: `More on ${singleCategory.name}`,
-            Category: singleCategory,
-        });
+        res.status(200).send(categoryToDTO(singleCategory));
     })
     .catch((err) => {
-        res.status(500).json({
+        res.status(400).send({
             success: false,
             message: 'This category does not exist',
             error: err.message,
@@ -24,41 +26,22 @@ const GetAllCategories = async(req,res) =>{
     Category.find()
     .select('name')
     .then((allCategories) => {
-        return res.status(200).json({
-            success: true,
-            message: 'A list of all categories',
-            Category: allCategories,
-        });
+        res.status(200).send(allCategories);
     })
     .catch((err) => {
-        res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again.',
-            error: err.message,
-        });
+        res.status(500).send(err);
     });
 }
 
 const CreateCategory = async (req, res) => {
-    const category = new Category({
-        //_id: mongoose.Types.ObjectId(),
+    let category = {
         name: req.body.name,
-    });
-    return category
-    .save()
-    .then((newCategory) => {
-        return res.status(201).json({
-            success: true,
-            message: 'New category created successfully',
-            Transaction: newCategory,
-        });
+    }
+    Category.create(category).then(newCategory => {
+        res.status(20).send(categoryToDTO(newCategory));
     })
     .catch((error) => {
-        res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again.',
-            error: error.message,
-        });
+        res.status(500).send(error);
     });
 }  
 
@@ -66,12 +49,10 @@ const DeleteCategory = async (req, res) => {
     const id = req.params.ID;
     Category.findByIdAndRemove(id)
     .exec()
-    .then(()=> res.status(204).json({
+    .then(()=> res.status(200).send({
         success: true,
     }))
-    .catch((err) => res.status(500).json({
-        success: false,
-    }));
+    .catch((err) => res.status(500).send(err));
 }
 
 const UpdateCategory = async (req, res) => {
@@ -80,17 +61,10 @@ const UpdateCategory = async (req, res) => {
     Category.findByIdAndUpdate(id, updateObject)
     .exec()
     .then(() => {
-        res.status(200).json({
-            success: true,
-            message: 'Category is updated',
-            updateCategory: updateObject,
-        });
+        res.status(200).send(updateObject);
     })
     .catch((err) => {
-        res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again.'
-        });
+        res.status(500).send(err);
     });
 }
 

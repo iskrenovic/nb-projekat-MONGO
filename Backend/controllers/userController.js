@@ -53,7 +53,7 @@ const DeleteUser = async (req, res) => {
     const id = req.params.ID;
     User.findByIdAndRemove(id)
     .exec()
-    .then(()=> res.status(204).send({
+    .then(()=> res.status(200).send({
         success: true,
     }))
     .catch((err) => res.status(500).send(err));
