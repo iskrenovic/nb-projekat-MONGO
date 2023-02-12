@@ -37,7 +37,7 @@
             <p>Odvojite tagove ; karakterom</p>
         </div>
 
-        <button @click="createItem">{{(selectedItem?'Create':'Update')}}</button>
+        <button @click="createItem">{{(selectedItem?'Update':'Create')}}</button>
         <button @click="cancel">Cancel</button>
     </div>
 </template>

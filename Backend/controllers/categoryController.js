@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Category = require('../models/categoryModel');
+const Item = require('../models/itemModel');
 const {categoryToDTO} = require('../dto_handler')
 
 const GetCategory = async(req, res) => {
@@ -47,6 +48,11 @@ const CreateCategory = async (req, res) => {
 
 const DeleteCategory = async (req, res) => {
     const id = req.params.ID;
+    let items = await Item.find({categoryID:req.params.ID});
+    items.forEach(async item=>{
+        await item.remove();
+    })
+    //BRISU SE SVI ITEMI KOJI IMAJU TAJ ID
     Category.findByIdAndRemove(id)
     .exec()
     .then(()=> res.status(200).send({

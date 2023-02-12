@@ -25,7 +25,7 @@
         <div class="transaction_list">
             <h3>Prethodne narudžbine:</h3>
             <div class="transactions">
-                <div class="transaction" v-for="trans in transactions" :key="trans._id">
+                <div class="transaction" v-for="trans in getPastTransactions" :key="trans._id">
                     <h3>Proizvod: <b>{{ getItemName(trans.itemID) }}</b></h3>
                     <h3>Datum: <b>{{ (new Date(trans.dateBought)).toDateString() }}</b></h3>
                     <h4>Način dostave: <b>{{ trans.deliveryType }}</b></h4>
@@ -61,6 +61,13 @@ export default defineComponent({
                 let today = new Date();
                 return d.toDateString() >=today.toDateString();
             })
+        },
+        getPastTransactions(){
+            return this.$store.getters['getTransactions'].filter(p=>{
+                let d = new Date(p.dateBought);
+                let today = new Date();
+                return d.toDateString() < today.toDateString();
+            })
         }
     },
     data(){
@@ -95,7 +102,9 @@ export default defineComponent({
             this.$router.push({name:'Login'});
         },
         getItemName(itemId){
-            let item = this.$store.getters['getItems'].filter(p=>p._id == itemId)[0];
+            let items = this.$store.getters['getItems'].filter(p=>p._id == itemId);
+            if(items.length==0) return "<DELETED>";
+            let item = items[0];
             return `${item.name} (Preostalo: ${item.count})`;
         },
         clickCategory(category){
