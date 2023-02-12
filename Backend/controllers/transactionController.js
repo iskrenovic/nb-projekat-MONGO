@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Transaction = require('../models/transactionModel');
+const {transactionToDTO} = require('../dto_handler')
+
 
 const GetTransaction = async(req, res) => {
     const id = req.params.ID;
@@ -10,10 +12,10 @@ const GetTransaction = async(req, res) => {
     }
     Transaction.findById(id)
     .then((singleTransaction) => {
-        res.status(200).send();
+        res.status(200).send(transactionToDTO(singleTransaction));
     })
     .catch((err) => {
-        res.status(500).json({
+        res.status(400).send({
             success: false,
             message: 'This transaction does not exist',
             error: err.message,

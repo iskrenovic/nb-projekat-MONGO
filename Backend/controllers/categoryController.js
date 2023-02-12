@@ -38,7 +38,7 @@ const CreateCategory = async (req, res) => {
         name: req.body.name,
     }
     Category.create(category).then(newCategory => {
-        res.status(20).send(categoryToDTO(newCategory));
+        res.status(200).send(categoryToDTO(newCategory));
     })
     .catch((error) => {
         res.status(500).send(error);
