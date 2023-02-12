@@ -44,9 +44,9 @@ const CreateTransaction = async (req, res) => {
         userID: req.body.userID,
         itemID: req.body.itemID
     };
-    Transaction.create(transaction).then(newTransaction => {
-        
+    Transaction.create(transaction).then(newTransaction => {        
         res.status(200).send(transactionToDTO(newTransaction));
+        Item.findByIdAndUpdate(itemID,{$inc:{count:-1}});
     })
     .catch((error) => {
         res.status(500).send(error);
