@@ -14,7 +14,6 @@ const CreateUser = async (req,res) => {
     let userType = User.Admin;
     let obj = {
         username: req.body.username,
-        password: hash,
         role: req.body.role,
         email: req.body.email,
         address: req.body.address,
@@ -26,6 +25,7 @@ const CreateUser = async (req,res) => {
         obj.phone = req.body.phone;
     }
     bcrypt.hash(req.body.password, saltRounds).then(hash => {
+        obj.password = hash;
         userType.create(obj).then(u => {
             res.status(200).send(userToDTO(u));
         })
@@ -36,7 +36,9 @@ const CreateUser = async (req,res) => {
 }
 //Proveravamo da nije neki username zauzet za svaki slučaj
 const usernameTaken = async (username, email) => {
-    let users = await User.find({username:username, email:email});
+    let users = await User.Admin.find({username:username, email:email});
+    if(users.length>0)return true;
+    users = await User.Customer.find({username:username, email:email});
     return users.length>0;
 }
 

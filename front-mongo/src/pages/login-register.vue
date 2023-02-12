@@ -12,12 +12,14 @@
         <select v-model="accType" v-if="registerOpen">
             <option disabled :value="''">SELECT TYPE OF ACCOUNT</option>
             <option :value="'admin'">Admin</option>
-            <option :value="'user'">User</option>
+            <option :value="'cusotmer'">Customer</option>
         </select>
-        <h3 v-if="registerOpen && accType!=''">Name:</h3>
-        <input v-if="registerOpen && accType!=''" type="text" v-model="name"/>
-        <h3 v-if="registerOpen && accType=='admin'">Surname:</h3>
-        <input v-if="registerOpen && accType=='admin'" type="text" v-model="surname"/>
+        <h3 v-if="registerOpen && accType=='cusotmer'">First name:</h3>
+        <input v-if="registerOpen && accType=='cusotmer'" type="text" v-model="name"/>
+        <h3 v-if="registerOpen && accType=='cusotmer'">Surname:</h3>
+        <input v-if="registerOpen && accType=='cusotmer'" type="text" v-model="surname"/>
+        <h3 v-if="registerOpen && accType=='cusotmer'">Phone:</h3>
+        <input v-if="registerOpen && accType=='cusotmer'" type="text" v-model="phone"/>
         <button @click="login">LOGIN</button>
         <button @click="register">REGISTER</button>
     </div>
@@ -39,6 +41,7 @@ export default defineComponent({
             password:'',
             email:'',
             accType:'',
+            phone:''
         }
     },
     methods:{
@@ -65,26 +68,24 @@ export default defineComponent({
                 this.registerOpen = true;
                 return;
             }
-            if(validateObjects(this.username, this.password, this.email, this.address, this.accType, this.name)){
-                switch(this.accType){
-                    case 'admin':
-                        if(!validateObjects(this.surname)) return;
-                        break
-                    case 'user':
-                        if(!validateObjects(this.address)) return;
-                        break
+            if(validateObjects(this.username, this.password, this.email, this.address, this.accType)){
+                if(this.accType == 'customer' && !validateObjects(this.name,this.surname, this.phone)){
+                    return;
                 }
                 
                 //@D
                 
-                await this.$store.dispatch('createAccount',{                    
-                    username:this.username,
-                    password:this.password,
-                    email:this.email,
-                    address:this.address,
-                    role:this.accType,
-                    name:this.name,
-                    surname:this.surname,
+                await this.$store.dispatch('createAccount',{
+                    user:{                  
+                        username:this.username,
+                        password:this.password,
+                        email:this.email,
+                        address:this.address,
+                        role:this.accType,
+                        firstname:this.name,
+                        surname:this.surname,
+                        phone:this.phone
+                    },
                     callback:(valid)=>{
                         if(valid) 
                             this.$router.push({name:'Homepage'});

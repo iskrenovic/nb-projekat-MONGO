@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import store from '@/api-service'
+import store from '@/api-service'
 import Homepage from '@/pages/homepage.vue'
 import LoginRegister from '@/pages/login-register.vue'
 // import SpacePage from '@/pages/space-page.vue'
@@ -17,13 +17,36 @@ const r = new Router({
             path:'/',
             name: 'Homepage',
             component: Homepage,
-            // beforeEnter(to, from, next){
-            //     if(!Vue.$cookies.get('uId')){
-            //         next({name:'Login'});
-            //         return;
-            //     }
-            //     next()
-            // }
+            beforeEnter(to, from, next){
+                if(!Vue.$cookies.get('uId')){
+                    next({name:'Login'});
+                    return;
+                }
+                let u = store.getters['getUser'];
+                if(u){
+                    console.log(u);
+                    if(u.type == 'admin'){
+                        next({name:'Admin'})
+                        return;
+                    }
+                    next();
+                    return;
+                }
+                store.dispatch('getUser', Vue.$cookies.get('uId'))
+                .then(()=>{
+                    let u = store.getters['getUser'];
+                    console.log(u);
+                    if(!u){
+                        next({name:'Login'});
+                        return;
+                    }
+                    if(u.type == 'admin'){
+                        next({name:'Admin'})
+                        return;
+                    }
+                    next();
+                })
+            }
         },        
         {
             path:'/',

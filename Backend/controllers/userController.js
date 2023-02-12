@@ -23,17 +23,22 @@ const GetUser = async(req, res) => {
                         error: err.message,
                     });
                 }
-                res.status(200).send(userToDTO(u));
+                let dto = userToDTO(u);
+                dto.type = "admin";
+                res.status(200).send(dto);
             })
             .catch((err) => {
                 res.status(400).send({
                     message: 'This user does not exist',
                     error: err.message,
                 });
+                
             });
             return;
         }
-        res.status(200).send(userToDTO(u));
+        let dto = userToDTO(u);
+        dto.type = "customer";
+        res.status(200).send(dto);
     })
     
 }

@@ -29,23 +29,12 @@ export default new Vuex.Store({
         }        
     },
     actions:{
-       /* async createAccount({commit}, account) {
-            let url = "";
-            switch(account.role){
-                case 'owner':
-                    url = '/api/register/createOwner'
-                    break;
-                case 'business':
-                    url = '/api/register/createBusiness'
-                    break;
-                case 'freelancer':
-                    url = '/api/register/createFreelancer'
-                    break;
-            }
-            return await Api().post(url, account).then(res=>{
+        async createAccount({commit}, account) {
+            
+            return await Api().post('/api/register/', account.user).then(res=>{
                 if(res.status == 200){
                     commit('setUser', res.data);
-                    Vue.$cookies.set('uId', res.data.ID,"24h");
+                    Vue.$cookies.set('uId', res.data._id,"24h");
                     account.callback(true);
                     window.location.reload();
                 }                   
@@ -55,7 +44,7 @@ export default new Vuex.Store({
             }).catch(err=>{
                 console.error(err);
             })
-        }, */
+        }, 
         async login({commit}, req){
             return await Api().post('/api/login/', req.user).then(res=>{
                 if(res.status == 200){
@@ -165,7 +154,7 @@ export default new Vuex.Store({
         async getAllCategories({commit}){
             try{
                 let res = await Api().get(`api/category/getAllCategories/`);
-                if(res.status==200){
+                if(res.status==200){                    
                     commit('setCategories', res.data);
                 }
             }
@@ -233,7 +222,7 @@ export default new Vuex.Store({
                 console.log(err);
             }  
         },
-        async getItems({commit}){
+        async getAllItems({commit}){
             try{
                 let res = await Api().get(`api/item/getAllItems/`);
                 if(res.status==200){
