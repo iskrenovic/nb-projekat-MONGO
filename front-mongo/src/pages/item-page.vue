@@ -87,10 +87,16 @@ export default defineComponent({
         async buy(){
             if(validateObjects(this.paymentType, this.deliveryType)){
                 await this.$store.dispatch('addTransaction',{
-                    paymentType: this.paymentType,
-                    deliveryType:this.deliveryType,
-                    userID: this.$cookies.get('uId'),
-                    itemID: this.$route.params.id
+                    transaction:{
+                        paymentType: this.paymentType,
+                        deliveryType:this.deliveryType,
+                        userID: this.$cookies.get('uId'),
+                        itemID: this.$route.params.id
+                    },
+                    callback: (valid)=>{
+                        alert((valid?"Uspešno naručeno.":"Neuspešno."));
+                        this.openForm = false;
+                    }
                 })
             }
             else{

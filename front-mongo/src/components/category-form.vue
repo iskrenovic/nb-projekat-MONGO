@@ -3,11 +3,7 @@
         <div class="seg">
             <h3>NAME:</h3>
             <input type="text" v-model="name"/>
-        </div>
-        <div class="seg">
-            <h3>IMAGE:</h3>
-            <input type="file" @change="selectImage"/>
-        </div>
+        </div>        
         <button @click="createCategory">Create</button>
         <button @click="cancel">Cancel</button>
     </div>
@@ -19,35 +15,59 @@ import {validateObjects} from '@/helpers/data-cheker'
 
 export default defineComponent({
     name:'category-form',
-    data(){
-        return{
-            name:'',
-            image:null
+    props:{
+        selectedCategory:{
+            required:false
         }
     },
-    methods:{
-        selectImage(img){
-            console.log("Selected image is:", img);
-            this.image = img;
-        },
-        inputValid(){
-            return this.name!='' && this.image
-        },
+    data(){
+        return{
+            name:''            
+        }
+    },
+    methods:{               
         //@D
         createCategory(){
-            if(validateObjects(this.name, this.image)){
-                this.$store.dispatch('addCategory', {
-                    name:this.name,
-                    userID:this.$cookies.get('uId')
-                });
-                console.log("VALIDAN INPUT")
-            }
-            else{
-                console.error("NOT VALID");
+            if(validateObjects(this.name)){
+                if(!this.selectedCategory){
+                    this.$store.dispatch('addCategory', {
+                        name:this.name,
+                        userID:this.$cookies.get('uId')
+                    });
+                }
+                else{
+                    this.$store.dispatch('updateCategory', {
+                        category:{
+                            _id:this.selectedCategory._id,
+                            name:this.name,
+                            userID:this.$cookies.get('uId')
+                        },
+                        callback: (valid)=>{
+                            alert((valid?"Uspešno.":"Neuspešno."));
+                            this.cancel();
+                        }
+                    });
+                }
             }
         },
         cancel(){
             this.$emit('cancel');
+        },
+        setupCategory(){
+            if(!this.selectedCategory){
+                this.name = ""
+            }
+            else{
+                this.name = this.selectedCategory.name;
+            }
+        }
+    },
+    created(){
+        this.setupCategory();
+    },
+    watch:{
+        selectedCategory : function(){
+            this.setupCategory();
         }
     },
     emits:['cancel']

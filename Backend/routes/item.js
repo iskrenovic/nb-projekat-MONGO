@@ -15,7 +15,7 @@ const {
 router.get('/getItem/:ID', GetItem);
 router.post('/createItem', CreateItem);
 router.delete('/deleteItem/:ID', DeleteItem);
-router.put('/updateItem/:ID', UpdateItem);
+router.put('/updateItem/', UpdateItem);
 router.get('/getAllItems', GetAllItems);
 router.get('/getItemsByCategoryId/:categoryID', GetItemsByCategoryId);
 router.get('/getItemsByGender/:gender', GetItemsByGender);

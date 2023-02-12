@@ -37,7 +37,7 @@
             <p>Odvojite tagove ; karakterom</p>
         </div>
 
-        <button @click="createItem">Create</button>
+        <button @click="createItem">{{(selectedItem?'Create':'Update')}}</button>
         <button @click="cancel">Cancel</button>
     </div>
 </template>
@@ -48,6 +48,11 @@ import {validateObjects} from '@/helpers/data-cheker'
 
 export default defineComponent({
     name:'item-form',
+    props:{
+        selectedItem:{
+            required:false
+        }
+    },
     data(){
         return{
             name:'',
@@ -73,20 +78,78 @@ export default defineComponent({
         },        
         async createItem(){
             if(validateObjects(this.name, this.brand, this.count, this.price, this.gender, this.category)){
-                await this.$store.dispatch('addItem', {
-                    name:this.name,
-                    brand:this.brand,
-                    count:this.count,
-                    price: this.price,
-                    gender:this.gender,
-                    tags:this.tags.split(';'),
-                    categoryID: this.category
-                });
-                this.$emit('cancel');
+                if(!this.selectedItem){
+                    await this.$store.dispatch('addItem', {
+                        name:this.name,
+                        brand:this.brand,
+                        count:this.count,
+                        price: this.price,
+                        gender:this.gender,
+                        tags:this.tags.split(';'),
+                        categoryID: this.category
+                    });
+                }
+                else{
+                    await this.$store.dispatch('updateItem', {
+                        item:{
+                            _id: this.selectedItem._id,
+                            name:this.name,
+                            brand:this.brand,
+                            count:this.count,
+                            price: this.price,
+                            gender:this.gender,
+                            tags:this.tags.split(';'),
+                            categoryID: this.category
+                        },
+                        callback: (valid)=>{
+                            alert((valid?"Uspešno promenjeno.":"Neuspešno."));
+                            this.$emit('cancel');
+                        }
+                    });
+                }
+                
             }
         },
         cancel(){
             this.$emit('cancel');
+        },
+        getTagStringFromArray(tags){
+            let str = "";
+            tags.forEach(tag=>{
+                str+=`${tag};`;
+            })
+            str = str.substring(0, str.length - 1);
+            return str;
+        },
+        setupItem(){
+            console.log(this.selectedItem);
+            if(!this.selectedItem){
+                this.name = "";
+                this.brand = "";
+                this.count = 0;
+                this.price = 0;
+                this.gender = "";
+                this.tags = "";
+                this.category = "";
+               
+            }
+            else{  
+                this.name = this.selectedItem.name;
+                this.brand = this.selectedItem.brand;
+                this.count = this.selectedItem.count;
+                this.price = this.selectedItem.price;
+                this.gender = this.selectedItem.gender;
+                this.tags = this.getTagStringFromArray(this.selectedItem.tags);
+                this.category = this.selectedItem.categoryID;
+            }
+        }
+    },
+    created(){
+        this.setupItem();
+    },
+    watch:{
+        selectedItem : function(){
+            this.setupItem();
         }
     },
     emits:['cancel']

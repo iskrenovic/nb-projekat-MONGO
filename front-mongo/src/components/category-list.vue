@@ -40,7 +40,7 @@ export default defineComponent({
             type:Boolean,
             required:false,
             default:false
-        },        
+        }           
     },
     data(){
         return{
@@ -57,7 +57,11 @@ export default defineComponent({
             if(!this.clickable){
                 this.clickable = true;
                 return;
-            }            
+            }
+            if(this.admin){
+                this.$emit('click', item);
+                return;
+            }  
             let p = {
                 id:item._id
             }

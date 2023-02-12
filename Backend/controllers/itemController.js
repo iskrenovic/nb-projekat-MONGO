@@ -24,7 +24,6 @@ const GetItem = async(req, res) => {
 
 const GetAllItems = async(req,res) =>{
     Item.find()
-    .select('name brand count price gender tags')
     .then((allItems) => {
         res.status(200).send(allItems);
     })
@@ -61,10 +60,9 @@ const DeleteItem = async (req, res) => {
     .catch((err) => res.status(500).send(err));
 }
 
-const UpdateItem = async (req, res) => {
-    const id = req.params.ID;
+const UpdateItem = async (req, res) => {    
     const updateObject = req.body;
-    Item.findByIdAndUpdate(id, updateObject)
+    Item.findByIdAndUpdate(req.body._id, updateObject)
     .exec()
     .then(() => {
         res.status(200).send(updateObject);

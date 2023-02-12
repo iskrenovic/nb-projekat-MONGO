@@ -56,9 +56,8 @@ const DeleteCategory = async (req, res) => {
 }
 
 const UpdateCategory = async (req, res) => {
-    const id = req.params.ID;
     const updateObject = req.body;
-    Category.findByIdAndUpdate(id, updateObject)
+    Category.findByIdAndUpdate(req.body._id, updateObject)
     .exec()
     .then(() => {
         res.status(200).send(updateObject);

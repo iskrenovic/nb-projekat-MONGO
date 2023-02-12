@@ -25,8 +25,7 @@ const GetTransaction = async(req, res) => {
 }
 
 const GetAllTransactions = async(req,res) =>{
-    Transaction.find()
-    .select('dateBought paymentType deliveryType')
+    Transaction.find()    
     .then((allTransactions) => {
         res.status(200).send(allTransactions);
     })
@@ -43,16 +42,17 @@ const CreateTransaction = async (req, res) => {
         userID: req.body.userID,
         itemID: req.body.itemID
     };
-    let i=Item.findById(req.body.itemID);
+    let i= await Item.findById(req.body.itemID);
     if(!i || i.count<=0)
     {
         res.status(400).send("Bad item");
         return;
     }
-    Transaction.create(transaction).then(newTransaction => {        
+    Transaction.create(transaction).then(async newTransaction => {
+        i.count = i.count - 1;
+        await i.save();
         res.status(200).send(transactionToDTO(newTransaction));
 
-        Item.findByIdAndUpdate(itemID,{$inc:{count:-1}});
     })
     .catch((error) => {
         res.status(500).send(error);

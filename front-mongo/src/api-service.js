@@ -190,6 +190,21 @@ export default new Vuex.Store({
                 }
             })
         },
+        async updateCategory({commit}, req) {
+            return await Api().put(`/api/category/updateCategory`, req.category).then(res=>{
+                if(res.status == 200){
+                    commit('removeCategory', req.category._id);
+                    commit('addNewCategory', res.data);
+                }
+                else{
+                    console.error(res);
+                }
+                req.callback(res.status == 200);
+            }).catch(err=>{
+                req.callback(false);
+                console.error(err);
+            })
+        },
         async deleteCategory({commit}, id){
             try{
                 let res = await Api().delete(`api/category/deleteCategory/${id}`);
@@ -212,6 +227,21 @@ export default new Vuex.Store({
                 else{
                     console.error(res);
                 }
+            })
+        },
+        async updateItem({commit}, req) {
+            return await Api().put('/api/item/updateItem/', req.item).then(res=>{
+                if(res.status == 200){
+                    commit('removeItem', req.item._id);
+                    commit('addNewItem', res.data);
+                }
+                else{
+                    console.error(res);
+                }
+                req.callback(res.status == 200);
+            }).catch(err=>{
+                req.callback(false);
+                console.error(err);
             })
         },
         async deleteItem({commit}, id){
@@ -372,7 +402,7 @@ export default new Vuex.Store({
 
         // T R A N S A C T I O N S
 
-        async getTransactions({commit}){
+        async getAllTransactions({commit}){
             try{
                 let res = await Api().get(`api/transaction/getAllTransactions/`);
                 if(res.status==200){
@@ -425,14 +455,19 @@ export default new Vuex.Store({
                 console.log(err);
             }
         },
-        async addTransaction({commit}, transaction) {
-            return await Api().post('/api/transaction/createTransaction/', transaction).then(res=>{
+        async addTransaction({commit}, req) {
+            return await Api().post('/api/transaction/createTransaction/', req.transaction).then(res=>{
                 if(res.status == 200){
                     commit('addTransactions', res.data);
+                    
                 }
                 else{
                     console.error(res);
                 }
+                req.callback(res.status == 200);
+            }).catch(err=>{
+                req.callback(false);
+                console.error(err);
             })
         },
         async deleteTransaction({commit}, id){
