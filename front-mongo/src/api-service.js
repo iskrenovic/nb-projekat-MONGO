@@ -162,7 +162,7 @@ export default new Vuex.Store({
 
         //  C A T E G O R Y
 
-        async getCategories({commit}){
+        async getAllCategories({commit}){
             try{
                 let res = await Api().get(`api/category/getAllCategories/`);
                 if(res.status==200){
@@ -248,7 +248,7 @@ export default new Vuex.Store({
             try{
                 let res = await Api().get(`api/item/getItem/${id}`);
                 if(res.status == 200){
-                    commit('setItem',res.data);
+                    commit('setItems',res.data);
                 }
                 else{
                     console.error(res.data);
@@ -303,7 +303,161 @@ export default new Vuex.Store({
                 console.log(err);
             }
         },
-    },
+        // R E V I E W S
+        async getReviews({commit}){
+            try{
+                let res = await Api().get(`api/review/getAllReviews/`);
+                if(res.status==200){
+                    commit('setReviews', res.data);
+                }
+            }
+            catch (err){
+                console.log(err);
+            }
+        },
+        async getReview({commit}, id){
+            try{
+                let res = await Api().get(`api/review/getReview/${id}`);
+                if(res.status == 200){
+                    commit('setReviews',res.data);
+                }
+                else{
+                    console.error(res.data);
+                }
+            }
+            catch (err){
+                console.log(err);
+            }
+        },
+        async getReviewsByUserId({commit}, userid){
+            try{
+                let res = await Api().get(`api/review/getReviewsByUserId/${userid}`);
+                if(res.status == 200){
+                    commit('setReviews',res.data);
+                }
+                else{
+                    console.error(res.data);
+                }
+            }
+            catch (err){
+                console.log(err);
+            }
+        },
+        async getReviewsByItemId({commit}, itemid){
+            try{
+                let res = await Api().get(`api/review/getReviewsByItemId/${itemid}`);
+                if(res.status == 200){
+                    commit('setReviews',res.data);
+                }
+                else{
+                    console.error(res.data);
+                }
+            }
+            catch (err){
+                console.log(err);
+            }
+        },
+        async addReview({commit}, review) {
+            return await Api().post('/api/review/createReview/', review).then(res=>{
+                if(res.status == 200){
+                    commit('addNewReviews', res.data);
+                }
+                else{
+                    console.error(res);
+                }
+            })
+        },
+        async deleteReview({commit}, id){
+            try{
+                let res = await Api().delete(`api/review/deleteReview/${id}`);
+                if(res.status == 200)
+                    commit('removeReviews', id);
+                else
+                    console.error(res);
+            }
+            catch (err){
+                console.log(err);
+            }  
+        },
+
+        // T R A N S A C T I O N S
+
+        async getTransactions({commit}){
+            try{
+                let res = await Api().get(`api/transaction/getAllTransactions/`);
+                if(res.status==200){
+                    commit('setTransactions', res.data);
+                }
+            }
+            catch (err){
+                console.log(err);
+            }
+        },
+        async getTransaction({commit}, id){
+            try{
+                let res = await Api().get(`api/transaction/getTransaction/${id}`);
+                if(res.status == 200){
+                    commit('setTransactions',res.data);
+                }
+                else{
+                    console.error(res.data);
+                }
+            }
+            catch (err){
+                console.log(err);
+            }
+        },
+        async getTransactionsByUserId({commit}, userid){
+            try{
+                let res = await Api().get(`api/transaction/getTransactionsByUserId/${userid}`);
+                if(res.status == 200){
+                    commit('setTransactions',res.data);
+                }
+                else{
+                    console.error(res.data);
+                }
+            }
+            catch (err){
+                console.log(err);
+            }
+        },
+        async getTransactionsByItemId({commit}, itemid){
+            try{
+                let res = await Api().get(`api/transaction/getTransactionsByItemId/${itemid}`);
+                if(res.status == 200){
+                    commit('setTransactions',res.data);
+                }
+                else{
+                    console.error(res.data);
+                }
+            }
+            catch (err){
+                console.log(err);
+            }
+        },
+        async addTransaction({commit}, transaction) {
+            return await Api().post('/api/transaction/createTransaction/', transaction).then(res=>{
+                if(res.status == 200){
+                    commit('addTransactions', res.data);
+                }
+                else{
+                    console.error(res);
+                }
+            })
+        },
+        async deleteTransaction({commit}, id){
+            try{
+                let res = await Api().delete(`api/transaction/deleteTransaction/${id}`);
+                if(res.status == 200)
+                    commit('removeTransactions', id);
+                else
+                    console.error(res);
+            }
+            catch (err){
+                console.log(err);
+            }  
+        }
+},
     mutations:{
         setCategories(state, categories){
             state.categories = categories;
@@ -338,7 +492,9 @@ export default new Vuex.Store({
         removeReviews(state, id){
             state.reviews = state.reviews.filter(p=>p._id != id);
         },
-
+        removeTransactions(state, id){
+            state.transactions = state.transactions.filter(p=>p._id != id);
+        },
         setTransactions(state, transactions){
             state.transactions = transactions;
         },

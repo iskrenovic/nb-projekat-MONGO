@@ -40,7 +40,8 @@ export default defineComponent({
            /* await this.$store.dispatch('getCategoryByName', ime);
             this.filtering = true;
             this.categories= this.$store.getters['getCategories']; */
-            this.categories= [ime];
+           // this.categories= [ime];
+           console.log(ime);
         },
         loginClick(){
 
@@ -55,8 +56,8 @@ export default defineComponent({
         },
         async cancelFilter(){
             this.filtering = false;
-            await this.$store.dispatch('get10Categories');        
-            this.categories = this.$store.getters['getCategories'];
+           // await this.$store.dispatch('get10Categories');        
+           // this.categories = this.$store.getters['getCategories'];
         }
     },
     data(){
@@ -72,7 +73,7 @@ export default defineComponent({
             await this.$store.dispatch('getUser', this.$cookies.get('uId'));
             this.user = this.$store.getters['getUser'];
         } 
-        await this.$store.dispatch('getCategories');        
+        await this.$store.dispatch('getAllCategories');        
         this.categories = this.$store.getters['getCategories'];        
     }
 })
