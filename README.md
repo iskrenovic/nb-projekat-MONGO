@@ -20,6 +20,7 @@ i ocene svih artikala, a može i sam da komentariše i ocenjuje artikle. Omoguć
 ### Tehnologija
 
 Za backend smo korsitili Node.js, a za frontend Vue.js.
+Baza podataka je odrađena u MongoDB-u.
 
 
 ### Pokretnaje
