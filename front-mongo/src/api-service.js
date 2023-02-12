@@ -8,6 +8,7 @@ export default new Vuex.Store({
         user:null,
         categories:null,
         items:null,
+        item:null,
         reviews:null,
         transactions:null
     },
@@ -17,6 +18,9 @@ export default new Vuex.Store({
         },
         getItems(state){
             return state.items;
+        },
+        getItem(state){
+            return state.item;
         },
         getReviews(state){
             return state.reviews;
@@ -237,7 +241,7 @@ export default new Vuex.Store({
             try{
                 let res = await Api().get(`api/item/getItem/${id}`);
                 if(res.status == 200){
-                    commit('setItems',res.data);
+                    commit('setItem',res.data);
                 }
                 else{
                     console.error(res.data);
@@ -453,7 +457,10 @@ export default new Vuex.Store({
         },
         setItems(state, items){
             state.items = items;
-        },        
+        },   
+        setItem(state, item){
+            state.item = item;
+        },       
         addNewItem(state, item){
             if(!state.items) state.items = []
             state.items.push(item);

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Transaction = require('../models/transactionModel');
+const Item = require('../models/itemModel');
 const {transactionToDTO} = require('../dto_handler')
 
 
@@ -35,14 +36,16 @@ const GetAllTransactions = async(req,res) =>{
 }
 
 const CreateTransaction = async (req, res) => {
+    
     let transaction = {
-        dateBought: req.body.dateBought,
+        dateBought: new Date(),
         paymentType: req.body.paymentType,
         deliveryType: req.body.deliveryType,
         userID: req.body.userID,
         itemID: req.body.itemID
     };
     Transaction.create(transaction).then(newTransaction => {
+        
         res.status(200).send(transactionToDTO(newTransaction));
     })
     .catch((error) => {

@@ -7,6 +7,7 @@ import LoginRegister from '@/pages/login-register.vue'
 // import RoomPage from '@/pages/room-page.vue'
 import AdminDash from '@/pages/admin-dash.vue'
 import CategoryPage from "@/pages/category-page.vue"
+import ItemPage from "@/pages/item-page.vue"
 // import ReservationMsg from '@/pages/reservation-msg.vue'
 
 
@@ -59,7 +60,19 @@ const r = new Router({
             //     }
             //     next()
             // }
-        },        
+        },
+        {
+            path:'/item/:categoryId/:id',
+            name: 'ItemPage',
+            component: ItemPage,
+            // beforeEnter(to, from, next){
+            //     if(!Vue.$cookies.get('uId')){
+            //         next({name:'Login'});
+            //         return;
+            //     }
+            //     next()
+            // }
+        },    
 
         {
             path:'/login',
@@ -108,94 +121,7 @@ const r = new Router({
             //         })
             //     }               
             // }
-        },
-        // {
-        //     path:'/space/:id',
-        //     name:'SpacePage',
-        //     component:SpacePage
-        // },
-        // {
-        //     path:'/owner/space/:id',
-        //     name:'OwnerSpacePage',
-        //     component:SpacePage,
-        //     beforeEnter(to, from,next){
-        //         if(!Vue.$cookies.get('uId')){
-        //             next({name:'Login'});
-        //             return;
-        //         }
-        //         let user = store.getters['getUser'];
-        //         if(user){
-        //             if(user.role == 'owner'){
-        //                 next();
-        //                 return;
-        //             }
-        //             next({name:'Homepage'});
-        //             return;
-        //         }
-        //         if(!user){
-        //             store.dispatch('getUserWithCallback',{
-        //                 id:Vue.$cookies.get('uId'),
-        //                 callback:(u)=>{
-        //                     if(!u){
-        //                         next({name:'Login'});
-        //                         return;
-        //                     }
-        //                     if(u.role == 'owner'){
-        //                         next();
-        //                         return;
-        //                     }
-        //                     next({name:'Homepage'});
-        //                 }
-        //             })
-        //         }               
-        //     }
-        // },
-        // {
-        //     path:'/room/:spaceId/:id',
-        //     name:'RoomPage',
-        //     component:RoomPage
-        // },
-        // {
-        //     path:'/owner/room/:spaceId/:id',
-        //     name:'OwnerRoomPage',
-        //     component:RoomPage,
-        //     beforeEnter(to, from,next){
-        //         if(!Vue.$cookies.get('uId')){
-        //             next({name:'Login'});
-        //             return;
-        //         }
-        //         let user = store.getters['getUser'];
-        //         if(user){
-        //             if(user.role == 'owner'){
-        //                 next();
-        //                 return;
-        //             }
-        //             next({name:'Homepage'});
-        //             return;
-        //         }
-        //         if(!user){
-        //             store.dispatch('getUserWithCallback',{
-        //                 id:Vue.$cookies.get('uId'),
-        //                 callback:(u)=>{
-        //                     if(!u){
-        //                         next({name:'Login'});
-        //                         return;
-        //                     }
-        //                     if(u.role == 'owner'){
-        //                         next();
-        //                         return;
-        //                     }
-        //                     next({name:'Homepage'});
-        //                 }
-        //             })
-        //         }               
-        //     }
-        // },
-        // {
-        //     path:'/reservation/:id',
-        //     name:'ReservationPage',
-        //     component:ReservationMsg
-        // }
+        },        
         
     ],
     mode: 'history'

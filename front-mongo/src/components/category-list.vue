@@ -40,7 +40,7 @@ export default defineComponent({
             type:Boolean,
             required:false,
             default:false
-        }        
+        },        
     },
     data(){
         return{
@@ -57,11 +57,7 @@ export default defineComponent({
             if(!this.clickable){
                 this.clickable = true;
                 return;
-            }
-            if(!this.linkable) {
-                this.clickToEmit(item);
-                return;
-            }
+            }            
             let p = {
                 id:item._id
             }
@@ -88,6 +84,7 @@ export default defineComponent({
             switch(this.type.toUpperCase()){
                 case "CATEGORY": 
                     this.linkName = "CategoryPage";  
+                    if(this.admin) this.linkName = "AdminCategoryPage"               
                     return true;                   
                 case "ITEM":
                     this.linkName = "ItemPage";
