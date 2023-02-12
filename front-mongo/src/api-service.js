@@ -48,7 +48,7 @@ export default new Vuex.Store({
                     Vue.$cookies.set('uId', res.data.ID,"24h");
                     account.callback(true);
                     window.location.reload();
-                }                
+                }                   
                 else{
                     console.error(res);
                 }

@@ -1,78 +1,36 @@
 const mongoose = require('mongoose');
-const user = require('../models/userModel');
+const User = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const {userToDTO} = require('../dto_handler')
 
-const CreateOwner = async (req,res) => {  
+const CreateUser = async (req,res) => {  
 
-    /*let ownerExists=GetOwnerByUsername(req.body.username)
-    let businessExists=GetBusinessByUsername(req.body.username)
-    let freelancerExists=GetFreelancerByUsername(req.body.username)
-    if(ownerExists==null)*/
     if(await usernameTaken(req.body.username)){
         res.status(409).send("USERNAME TAKEN");
         return;
     }
     //Sve šifre obavezo heširamo kako se ne bi čuvale u svom normalnom stanju i ne bi bile sigurnosni rizik
-    bcrypt.hash(req.body.password, saltRounds).then(hash => {
-        const owner = new User({
-            username: req.body.username,
-            password: hash,
-            role: req.body.role,
-            email: req.body.email,
-            address: req.body.address,
-            firstname: req.body.firstname
-        });
-        return owner
-        .save()
-        .then((newOwner) => {
-            return res.status(201).json({
-                success: true,
-                message: 'New owner created successfully',
-                Owner: newOwner,
-            });
-        })
-        .catch((error) => {
-            res.status(500).json({
-                success: false,
-                message: 'Server error. Please try again.',
-                error: error.message,
-            });
-        });
-    }).catch(err => res.status(500).send(err))
-}
-
-const CreateCustomer = async (req,res) => {  
-    if(await usernameTaken(req.body.username)){
-        res.status(409).send("USERNAME TAKEN");
-        return;
+    let userType = User.Admin;
+    let obj = {
+        username: req.body.username,
+        password: hash,
+        role: req.body.role,
+        email: req.body.email,
+        address: req.body.address,
+    }
+    if(req.body.type == "customer"){
+        userType = User.Customer;
+        obj.firstname = req.body.firstname;
+        obj.lastname = req.body.lastname;
+        obj.phone = req.body.phone;
     }
     bcrypt.hash(req.body.password, saltRounds).then(hash => {
-        const customer = new User({
-            //_id: mongoose.Types.ObjectId(),
-            username: req.body.username,
-            password: req.body.password,
-            role: req.body.role,
-            email: req.body.email,
-            address: req.body.address,
-            firstname: req.body.firstname,
-            phone: req.body.phone,
-        });
-        return customer
-        .save()
-        .then((newCustomer) => {
-            return res.status(201).json({
-                success: true,
-                message: 'New customer created successfully',
-                Customer: newCustomer,
-            });
+        userType.create(obj).then(u => {
+            res.status(200).send(userToDTO(u));
         })
         .catch((error) => {
-            res.status(500).json({
-                success: false,
-                message: 'Server error. Please try again.',
-                error: error.message,
-            });
+            res.status(500).send(error);
         });
     }).catch(err => res.status(500).send(err))
 }
@@ -83,6 +41,5 @@ const usernameTaken = async (username, email) => {
 }
 
 module.exports = {
-    CreateOwner,
-    CreateCustomer,
+    CreateUser,
 };

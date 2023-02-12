@@ -1,81 +1,62 @@
 const mongoose = require('mongoose');
 const User = require('../models/userModel');
+const {userToDTO} = require('../dto_handler')
+
+
 
 const GetUser = async(req, res) => {
     const id = req.params.ID;
-    User.findById(id)
-    .then((singleUser) => {
-        res.status(200).json({
-            success: true,
-            message: `Successful`,
-            User: singleUser,
-        });
+    if(!id || id == "null"){
+        console.log("NIJE ID");
+        await res.status(400).send("INVALID ID");
+        return;
+    }
+    User.Customer.findById(id)
+    .then(singleUser => {
+        if(!singleUser){
+            User.Admin.findById(id)
+            .then(u =>{
+                if(!u){
+                    res.status(400).send({
+                        success: false,
+                        message: 'This user does not exist',
+                        error: err.message,
+                    });
+                }
+                res.status(200).send(userToDTO(u));
+            })
+            .catch((err) => {
+                res.status(400).send({
+                    message: 'This user does not exist',
+                    error: err.message,
+                });
+            });
+            return;
+        }
+        res.status(200).send(userToDTO(u));
     })
-    .catch((err) => {
-        res.status(500).json({
-            success: false,
-            message: 'This user does not exist',
-            error: err.message,
-        });
-    });
+    
 }
 
 const GetAllUsers = async(req,res) =>{
     User.find()
     .select('username role email address')
-    .then((allUsers) => {
-        return res.status(200).json({
-            success: true,
-            message: 'A list of all users',
-            User: allUsers,
-        });
+    .then((allUsers) => {        
+        res.status(200).send(allUsers);
     })
     .catch((err) => {
-        res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again.',
-            error: err.message,
-        });
+        res.status(500).send(err);
     });
-}
-
-/*const CreateUser = async (req, res) => {
-    const user = new User({
-        //_id: mongoose.Types.ObjectId(),
-        username: req.body.username,
-        password: req.body.password,
-        role: req.body.role,
-        email: req.body.email,
-        address: req.body.address,
-    });
-    return user
-    .save()
-    .then((newUser) => {
-        return res.status(201).json({
-            success: true,
-            message: 'New user created successfully',
-            User: newUser,
-        });
-    })
-    .catch((error) => {
-        res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again.',
-            error: error.message,
-        });
-    });
-} */ 
+} 
 
 const DeleteUser = async (req, res) => {
     const id = req.params.ID;
     User.findByIdAndRemove(id)
     .exec()
-    .then(()=> res.status(204).json({
+    .then(()=> res.status(204).send({
         success: true,
     }))
-    .catch((err) => res.status(500).json({
-        success: false,
-    }));
+    .catch((err) => res.status(500).send(err));
 }
 
 const UpdateUser = async (req, res) => {
@@ -84,17 +65,10 @@ const UpdateUser = async (req, res) => {
     User.findByIdAndUpdate(id, updateObject)
     .exec()
     .then(() => {
-        res.status(200).json({
-            success: true,
-            message: 'User is updated',
-            updateUser: updateObject,
-        });
+        res.status(200).send(updateObject);
     })
     .catch((err) => {
-        res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again.'
-        });
+        res.status(500).send(err);
     });
 }
 

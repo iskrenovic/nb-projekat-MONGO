@@ -11,34 +11,33 @@ router.get('/get/username/:id',GetCustomerByUsername);
 
 router.post('/', async (req,res)=>{
     try{
-    //let User = await neo4j.first('User', {username : req.body.username})
-    let User = await User.findOne({ username: req.body.username });
+        let User = await User.findOne({ username: req.body.username });
 
-    if(User == false){
-        res.status(404).send('User not found!')
-        return;
-    }
-    
-    
-    bcrypt.compare(req.body.password, User._properties.get("password"), (err, result)  => {
-        if(result){
-            let user = {
-                username : User._properties.get("username"),
-                ID : User._properties.get("ID"),
-                role : User._properties.get("role"),
-                email : User._properties.get("email"),
-                address : User._properties.get("address")
-            }
-            res.send(user);
+        if(!User){
+            res.status(404).send('User not found!')
             return;
-        }else{
-            res.status(401).send({
-                error: "Incorrect password"})
         }
-    })  
-   }catch(e){
-        res.status(500).send(e)
-    }  
-})
+        
+        
+        bcrypt.compare(req.body.password, User.password), (err, result)  => {
+            if(result){
+                let user = {
+                    username : User.username,
+                    ID : User.ID,
+                    role : User.role,
+                    email : User.email,
+                    address : User.address
+                }
+                res.send(user);
+                return;
+            }
+            res.status(401).send("Incorrect password");      
+        }    
+    }
+    catch(err){
+        console.log(err);
+        res.status(500).send();
+    }
+});
 
 module.exports = router

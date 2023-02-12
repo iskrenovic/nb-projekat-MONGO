@@ -29,12 +29,7 @@ const extend = (Schema, obj) => (
   
 const AdminSchema = extend(userSchema,
 {
-    firstname:{
-        type: String
-    },
-    lastname:{
-        type: String
-    }
+    
 });
 
 const CustomerSchema = extend(userSchema,
