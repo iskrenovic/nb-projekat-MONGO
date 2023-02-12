@@ -9,6 +9,30 @@ const userToDTO = (user) =>{
         address:user.address
     }
 }
+
+const categoryToDTO = (category) =>{
+    return {
+        name:category.name,
+        _id:category._id
+    }
+}
+
+const transactionToDTO = (transaction) =>{
+    return {
+        dateBought: transaction.dateBought,
+        paymentType: transaction.paymentType,
+        deliveryType: transaction.deliveryType,
+        _id: transaction._id,
+        userID: transaction.userID,
+        itemID: transaction.itemID
+    }
+}
+
+const reviewToDTO = (review) =>{
+    return {
+
+    }
+}
     
 //Umesto .json da bude .send
 //Da nema status, success, itd.
@@ -16,5 +40,7 @@ const userToDTO = (user) =>{
 // create da nije new ... , nego Model.create
 
 module.exports = {
-    userToDTO
+    userToDTO,
+    categoryToDTO,
+    transactionToDTO,
 }
