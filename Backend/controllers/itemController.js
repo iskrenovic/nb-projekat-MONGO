@@ -1,18 +1,20 @@
 const mongoose = require('mongoose');
 const Item = require('../models/itemModel');
+const {itemToDTO} = require('../dto_handler')
 
 const GetItem = async(req, res) => {
     const id = req.params.ID;
+    if(!id || id == "null"){
+        console.log("NIJE ID");
+        await res.status(400).send("INVALID ID");
+        return;
+    }
     Item.findById(id)
     .then((singleItem) => {
-        res.status(200).json({
-            success: true,
-            message: `More on ${singleItem.name}`,
-            Item: singleItem,
-        });
+        res.status(200).send(itemToDTO(singleItem));
     })
     .catch((err) => {
-        res.status(500).json({
+        res.status(400).send({
             success: false,
             message: 'This item does not exist',
             error: err.message,
@@ -24,24 +26,15 @@ const GetAllItems = async(req,res) =>{
     Item.find()
     .select('name brand count price gender tags')
     .then((allItems) => {
-        return res.status(200).json({
-            success: true,
-            message: 'A list of all items',
-            Item: allItems,
-        });
+        res.status(200).send(allItems);
     })
     .catch((err) => {
-        res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again.',
-            error: err.message,
-        });
+        res.status(500).send(err);
     });
 }
 
 const CreateItem = async (req, res) => {
-    const item = new Item({
-        //_id: mongoose.Types.ObjectId(),
+    let item ={
         name: req.body.name,
         brand: req.body.brand,
         count: req.body.count,
@@ -49,22 +42,12 @@ const CreateItem = async (req, res) => {
         gender: req.body.gender,
         tags: req.body.tags,
         categoryID: req.body.categoryID
-    });
-    return item
-    .save()
-    .then((newItem) => {
-        return res.status(201).json({
-            success: true,
-            message: 'New item created successfully',
-            Item: newItem,
-        });
+    };
+    Item.create(item).then((newItem) => {
+        res.status(200).send(itemToDTO(newItem));
     })
     .catch((error) => {
-        res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again.',
-            error: error.message,
-        });
+        res.status(500).send(error);
     });
 }  
 
@@ -72,12 +55,10 @@ const DeleteItem = async (req, res) => {
     const id = req.params.ID;
     Item.findByIdAndRemove(id)
     .exec()
-    .then(()=> res.status(204).json({
+    .then(()=> res.status(200).send({
         success: true,
     }))
-    .catch((err) => res.status(500).json({
-        success: false,
-    }));
+    .catch((err) => res.status(500).send(err));
 }
 
 const UpdateItem = async (req, res) => {
@@ -86,17 +67,10 @@ const UpdateItem = async (req, res) => {
     Item.findByIdAndUpdate(id, updateObject)
     .exec()
     .then(() => {
-        res.status(200).json({
-            success: true,
-            message: 'Item is updated',
-            updateItem: updateObject,
-        });
+        res.status(200).send(updateObject);
     })
     .catch((err) => {
-        res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again.'
-        });
+        res.status(500).send(err);
     });
 }
 
@@ -105,18 +79,10 @@ const GetItemsByCategoryId = async (req,res) => {
     Item.find({"categoryID": id})
     .select('name brand count price gender tags')
     .then((allItems) => {
-        return res.status(200).json({
-            success: true,
-            message: 'A list of all items in category',
-            Item: allItems,
-        });
+        res.status(200).send(allItems);
     })
     .catch((err) => {
-        res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again.',
-            error: err.message,
-        });
+        res.status(500).send(err);
     });
 }
 
@@ -125,18 +91,10 @@ const GetItemsByGender = async (req,res) => {
     Item.find({"gender": gender})
     .select('name brand count price gender tags')
     .then((allItems) => {
-        return res.status(200).json({
-            success: true,
-            message: 'A list of all items for gender',
-            Item: allItems,
-        });
+        res.status(200).send(allItems);
     })
     .catch((err) => {
-        res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again.',
-            error: err.message,
-        });
+        res.status(500).send(err);
     });
 }
 
@@ -145,18 +103,10 @@ const GetItemsByTags = async (req,res) => {
     Item.find({"tags": tags})
     .select('name brand count price gender tags')
     .then((allItems) => {
-        return res.status(200).json({
-            success: true,
-            message: 'A list of all items for tags',
-            Item: allItems,
-        });
+        return res.status(200).send(allItems);
     })
     .catch((err) => {
-        res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again.',
-            error: err.message,
-        });
+        res.status(500).send(err);
     });
 }
 

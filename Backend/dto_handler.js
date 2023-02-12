@@ -30,7 +30,24 @@ const transactionToDTO = (transaction) =>{
 
 const reviewToDTO = (review) =>{
     return {
+        grade: review.grade,
+        comment: review.comment,
+        _id: review._id,
+        userID: review.userID,
+        itemID: review.itemID
+    }
+}
 
+const itemToDTO = (item) =>{
+    return {
+        name: item.name,
+        brand: item.brand,
+        count: item.count,
+        price: item.price,
+        gender: item.gender,
+        tags: item.tags,
+        _id: item._id,
+        categoryID: item.categoryID
     }
 }
     
@@ -43,4 +60,6 @@ module.exports = {
     userToDTO,
     categoryToDTO,
     transactionToDTO,
+    reviewToDTO,
+    itemToDTO
 }
