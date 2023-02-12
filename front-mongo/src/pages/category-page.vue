@@ -1,38 +1,26 @@
 <template>
     <div v-if="loaded">
        <button @click="goBack">Back</button>
-       <div class="section">
-            <button v-if="admin && !openForm" @click="createItem">CREATE ITEM</button> 
-            <item-form v-if="admin && openForm" @cancel="closeForm"/>
-            <category-list :list="list" type="item" :admin="admin" :linkable="user.role.toLowerCase() != 'business'" @click="selectItem"/>
-        </div>
-       <div class="section" v-if="admin">
-            <h3>Category</h3>
-            <category-form v-if="openCategoryForm" @cancel="categoryCancel"/>
-            <button v-else @click="createNewcategory">CREATE NEW</button>
-            <category-list :list="categoryList" type="category" admin :linkable="false"/>
-            <!--LISTA EQUIPMENTA-->
-        </div>
+       <search-bar @searchBy="searchBy" @cancelFilter="cancelFilter" :items="list"/>
+       <div class="section">            
+            <category-list :list="list" type="item"/>
+        </div>       
     </div>
 </template>
-
 
 <script>
 import { defineComponent } from '@vue/composition-api'
 import categoryList from '@/components/category-list.vue';
-import itemForm from '@/components/item-form.vue';
-import categoryForm from '@/components/category-form.vue';
+import searchBar from '@/components/searchBar.vue';
 export default defineComponent({
     name:'category-page',
     components:{
         categoryList,
-        itemForm,
-        categoryForm
+        searchBar
     },
     data(){
         return {
             list:[],
-            admin:false,
             user:null,
             selectedItem:null,
             openForm:false,
@@ -63,27 +51,39 @@ export default defineComponent({
         },
         selectItem(item){
             this.selectedItem = item;
+        },
+        async searchBy(req){
+            this.list = this.$store.getters['getItems'];
+            this.list = this.list.filter(p=>{
+                if(req.gender != ''){
+                    if(req.gender != p.gender){
+                        return false;
+                    }   
+                }
+                if(req.tags.length == 0) return true;
+                let found = false;
+                req.tags.forEach(tag=>{
+                    console.log(p.tags, tag, p.tags.indexOf(tag));                 
+                    if(p.tags.indexOf(tag)>=0){ 
+                        found = true;
+                        return;
+                    }
+                })
+                return found;                
+            })            
+         },
+         async cancelFilter(){
+            this.list = this.$store.getters['getItems'];
+           // await this.$store.dispatch('get10Categories');        
+           // this.categories = this.$store.getters['getCategories'];
         }
         
     },
-    async created(){
-      /*  this.admin = this.$route.name == "OwnerSpacePage"
-        await this.$store.dispatch('getRoomsBySpaceID',{
-            id:this.$route.params.id,
-            callback:(resp)=>{
-                this.list = resp;
-            }
-        })
-        this.user = this.$store.getters['getUser'];
-        if(!this.user){
-            await this.$store.dispatch('getUser', this.$cookies.get('uId'));
-            this.user = this.$store.getters['getUser'];
-        } 
-        await this.$store.dispatch('getEquipmentByUserId',this.$route.params.id);
-        this.equipmentList = this.$store.getters['getEquipment'];
-        if(!this.equipmentList) this.equipmentList = [];
+    async created(){        
+        await this.$store.dispatch('getItemsByCategoryId',this.$route.params.id);
+        this.list = this.$store.getters['getItems'];
         this.loaded = true;
-        //@NINA kad ti treba primer za getter-evo ti */
+        //@NINA kad ti treba primer za getter-evo ti 
     }
 })
 </script>

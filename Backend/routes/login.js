@@ -4,6 +4,7 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcrypt')
 const { GetCustomerByUsername } = require('../controllers/loginController')
+const {userToDTO} = require('../dto_handler');
 
 router.get('/get/username/:id',GetCustomerByUsername);
 //router.get('/get/username/:id',GetBusinessByUsername);
@@ -11,28 +12,25 @@ router.get('/get/username/:id',GetCustomerByUsername);
 
 router.post('/', async (req,res)=>{
     try{
-        let User = await User.findOne({ username: req.body.username });
-
+        let User = await user.Customer.findOne({ username: req.body.username });
+        let type = "customer"
         if(!User){
-            res.status(404).send('User not found!')
-            return;
-        }
-        
-        
-        bcrypt.compare(req.body.password, User.password), (err, result)  => {
+            User = await user.Admin.findOne({username:req.body.username});
+            if(!User){
+                res.status(404).send('User not found!')
+                return;
+            }
+            type = "admin";
+        }       
+        console.log(User);
+        bcrypt.compare(req.body.password, User.password, (err, result)  => {
             if(result){
-                let user = {
-                    username : User.username,
-                    ID : User.ID,
-                    role : User.role,
-                    email : User.email,
-                    address : User.address
-                }
-                res.send(user);
+                User.type = type;
+                res.status(200).send(userToDTO(User));
                 return;
             }
             res.status(401).send("Incorrect password");      
-        }    
+        });
     }
     catch(err){
         console.log(err);

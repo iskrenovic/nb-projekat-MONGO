@@ -5,6 +5,7 @@ import router from '@/router/router'
 import VueCookies from 'vue-cookies'
 import axios from 'axios'
 
+
 axios.defaults.baseURL = process.env.API_ENDPOINT;
 Vue.config.productionTip = false
 Vue.use(VueCookies);

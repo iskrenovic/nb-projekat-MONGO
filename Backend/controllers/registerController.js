@@ -18,7 +18,9 @@ const CreateUser = async (req,res) => {
         email: req.body.email,
         address: req.body.address,
     }
-    if(req.body.type == "customer"){
+    console.log(req.body.role);
+    console.log(req.body);
+    if(req.body.role == "customer"){
         userType = User.Customer;
         obj.firstname = req.body.firstname;
         obj.lastname = req.body.lastname;

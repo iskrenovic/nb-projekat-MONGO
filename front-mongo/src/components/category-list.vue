@@ -40,13 +40,7 @@ export default defineComponent({
             type:Boolean,
             required:false,
             default:false
-        },
-        linkable:{
-            type:Boolean,
-            required:false,
-            default:true
-        }
-        // @NINA Ovo se poziva kada gleda u listu vlasnik prostora, ako ti nije jasno kako funkcionise ili zasto je tako objasnicu ti kada se budemo videli
+        }        
     },
     data(){
         return{
@@ -69,7 +63,7 @@ export default defineComponent({
                 return;
             }
             let p = {
-                id:item.ID
+                id:item._id
             }
             if(this.type.toUpperCase() == 'ITEM'){
                 p.categoryId = this.$route.params.id;
@@ -82,20 +76,18 @@ export default defineComponent({
         async deleteItem(item){
             this.clickable = false;
             let ans = window.confirm(`Are you sure you want to delete ${item.name} space?`)
-            console.log(ans);
-            /* @D
+            console.log(ans);            
             if(ans){
-                //TODO
-                await this.$store.dispatch('deleteSpace', item.ID);
+                let link = (this.type.toUpperCase() == 'ITEM'?'deleteItem':'deleteCategory')
+                await this.$store.dispatch(link, item._id);
                 console.log("TREBA OBRISATI ITEM:",item);
             }
-            */
+            
         },
         setupType(){
             switch(this.type.toUpperCase()){
                 case "CATEGORY": 
                     this.linkName = "CategoryPage";  
-                    if(this.admin) this.linkName = "AdminCategoryPage"               
                     return true;                   
                 case "ITEM":
                     this.linkName = "ItemPage";

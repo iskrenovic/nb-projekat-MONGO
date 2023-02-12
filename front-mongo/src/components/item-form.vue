@@ -18,8 +18,24 @@
         </div>            
         <div class="seg">
             <h3>Gender:</h3>
-            <input type="text" v-model="gender"/>
-        </div>    
+            <select v-model="gender">
+                <option disabled :value="''">SELECT GENDER</option>
+                <option>Muški</option>
+                <option>Ženski</option>
+            </select>
+        </div>
+        <div class="seg">
+            <h3>Category:</h3>
+            <select v-model="category">
+                <option disabled :value="''">SELECT CATEGORY</option>
+                <option v-for="opt in getCategories" :key="opt._id" :value="opt._id">{{ opt.name }}</option>
+            </select>
+        </div>
+        <div class="seg">
+            <h3>Tags:</h3>
+            <textarea v-model="tags"></textarea>
+            <p>Odvojite tagove ; karakterom</p>
+        </div>
 
         <button @click="createItem">Create</button>
         <button @click="cancel">Cancel</button>
@@ -39,26 +55,34 @@ export default defineComponent({
             count:1,
             price:0,
             gender:'',
-            tags:[]
+            tags:'',
+            category:'',
+            categories:[],
 
+        }
+    },
+    computed:{
+        getCategories(){
+            return this.$store.getters['getCategories'];
         }
     },
     methods:{
         selectImage(img){
             console.log("Selected image is:", img);
             this.image = img;
-        },       
+        },        
         async createItem(){
-            if(validateObjects(this.name, this.brand, this.count, this.price, this.gender, this.tags)){
+            if(validateObjects(this.name, this.brand, this.count, this.price, this.gender, this.category)){
                 await this.$store.dispatch('addItem', {
                     name:this.name,
                     brand:this.brand,
                     count:this.count,
                     price: this.price,
                     gender:this.gender,
-                    tags:this.tags,
-                    categoryID: this.$route.params.id
+                    tags:this.tags.split(';'),
+                    categoryID: this.category
                 });
+                this.$emit('cancel');
             }
         },
         cancel(){

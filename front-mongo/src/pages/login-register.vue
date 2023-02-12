@@ -12,14 +12,14 @@
         <select v-model="accType" v-if="registerOpen">
             <option disabled :value="''">SELECT TYPE OF ACCOUNT</option>
             <option :value="'admin'">Admin</option>
-            <option :value="'cusotmer'">Customer</option>
+            <option :value="'customer'">Customer</option>
         </select>
-        <h3 v-if="registerOpen && accType=='cusotmer'">First name:</h3>
-        <input v-if="registerOpen && accType=='cusotmer'" type="text" v-model="name"/>
-        <h3 v-if="registerOpen && accType=='cusotmer'">Surname:</h3>
-        <input v-if="registerOpen && accType=='cusotmer'" type="text" v-model="surname"/>
-        <h3 v-if="registerOpen && accType=='cusotmer'">Phone:</h3>
-        <input v-if="registerOpen && accType=='cusotmer'" type="text" v-model="phone"/>
+        <h3 v-if="registerOpen && accType=='customer'">First name:</h3>
+        <input v-if="registerOpen && accType=='customer'" type="text" v-model="name"/>
+        <h3 v-if="registerOpen && accType=='customer'">Surname:</h3>
+        <input v-if="registerOpen && accType=='customer'" type="text" v-model="surname"/>
+        <h3 v-if="registerOpen && accType=='customer'">Phone:</h3>
+        <input v-if="registerOpen && accType=='customer'" type="text" v-model="phone"/>
         <button @click="login">LOGIN</button>
         <button @click="register">REGISTER</button>
     </div>

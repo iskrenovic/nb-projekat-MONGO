@@ -76,7 +76,7 @@ const UpdateItem = async (req, res) => {
 
 const GetItemsByCategoryId = async (req,res) => {
     const id = req.params.categoryID; 
-    Item.find({"categoryID": id})
+    Item.find({categoryID: id})
     .select('name brand count price gender tags')
     .then((allItems) => {
         res.status(200).send(allItems);

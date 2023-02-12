@@ -1,19 +1,28 @@
 <template>
     <div class="search-bar">        
         <h3>Filtriraj rezultate</h3>
-        <h2>Kategorija:</h2>
-        <select v-model="selectKategorija">
-            <option value="">Sve</option>
-            <option v-for="kat in kategorije" :key="kat">{{ kat }}</option>
-        </select>        
+        <h2>Pol:</h2>
+        <select v-model="gender">
+            <option disabled :value="''">SELECT GENDER</option>
+            <option>Muški</option>
+            <option>Ženski</option>
+        </select>
+        <h2>Tagovi:</h2>
+        <div class="tags">
+            <div v-for="tag in tagovi" :key="tag" class="tag-item">
+                <label :for="tag">{{tag}}</label>
+                <input :id="tag" type="checkbox" v-model="tags" :value="tag"/>
+            </div>
+        </div>
+              
         <button @click="pronadji">Pronadji</button>
+        <button v-if="filtered" @click="cancelFilter">UGASI FILTERE</button>
     </div>
 </template>
 
 
 <script>
 import { defineComponent } from '@vue/composition-api'
-
 export default defineComponent({
     name:'search-bar',
     props:{
@@ -21,32 +30,47 @@ export default defineComponent({
             type:Boolean,
             required: false,
             default: false
+        },
+        items:{
+            type:Array,
+            required:true
         }
     },
     data(){
         return {
-            naziv:'',
-            selectKategorija:'',
-            kategorije:["Zima", "Leto", "Musko","Zensko", "Jesen"]
+            tagovi:[],
+            gender:'',
+            tags:[],
+            filtered:false
+            
         }
     },
-    //@D
-    /*
+    
     created(){
-        this.$store.dispatch('getCategories', (data)=>{
-            this.kategorije = data;
+        this.tagovi = [];
+        this.items.forEach(item=>{
+            item.tags.forEach(tag=>{
+                if(this.tagovi.indexOf(tag) < 0){
+                    this.tagovi.push(tag);
+                }
+            })
         })
-    },
-    */
+    },    
     methods:{
-        pronadji(){
-            if(this.selectKategorija!='')
-                this.$emit('searchBy', this.selectKategorija);
-            else{
-                this.$emit('cancelFilter');
-            }
+        pronadji(){            
+            this.$emit('searchBy', {
+                gender:this.gender,
+                tags:this.tags
+            })
+            this.filtered = true;
         },
-    },
+        cancelFilter(){
+            this.$emit('cancelFilter');
+            this.filtered = false;
+            this.gender = '';
+            this.tags = [];
+        }
+    },   
     watch:{
         selectKategorija: function(newValue){
             console.log("Promenjeno na", newValue);
@@ -113,6 +137,13 @@ export default defineComponent({
 
 .search-bar button:hover {
   background-color: #45a049;
+}
+.tags{
+    display: flex;
+}
+.tag-item{
+    margin:5px;
+    
 }
 
 </style>

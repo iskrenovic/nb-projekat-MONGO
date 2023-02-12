@@ -49,7 +49,7 @@ export default new Vuex.Store({
             return await Api().post('/api/login/', req.user).then(res=>{
                 if(res.status == 200){
                     commit('setUser', res.data);
-                    Vue.$cookies.set('uId', res.data.ID,"24h");
+                    Vue.$cookies.set('uId', res.data._id,"24h");
                     req.callback(true);
                     window.location.reload();
                 }
@@ -256,7 +256,6 @@ export default new Vuex.Store({
                 else{
                     console.error(res.data);
                 }
-                console.log(res.data);
             }
             catch (err){
                 console.log(err);
@@ -271,7 +270,6 @@ export default new Vuex.Store({
                 else{
                     console.error(res.data);
                 }
-                console.log(res.data);
             }
             catch (err){
                 console.log(err);
@@ -286,7 +284,6 @@ export default new Vuex.Store({
                 else{
                     console.error(res.data);
                 }
-                console.log(res.data);
             }
             catch (err){
                 console.log(err);

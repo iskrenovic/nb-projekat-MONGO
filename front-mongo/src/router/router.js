@@ -49,7 +49,7 @@ const r = new Router({
             }
         },        
         {
-            path:'/',
+            path:'/category/:id',
             name: 'CategoryPage',
             component: CategoryPage,
             // beforeEnter(to, from, next){

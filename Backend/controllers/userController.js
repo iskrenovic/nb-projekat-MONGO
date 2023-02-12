@@ -2,8 +2,6 @@ const mongoose = require('mongoose');
 const User = require('../models/userModel');
 const {userToDTO} = require('../dto_handler')
 
-
-
 const GetUser = async(req, res) => {
     const id = req.params.ID;
     if(!id || id == "null"){
@@ -36,7 +34,7 @@ const GetUser = async(req, res) => {
             });
             return;
         }
-        let dto = userToDTO(u);
+        let dto = userToDTO(singleUser);
         dto.type = "customer";
         res.status(200).send(dto);
     })

@@ -29,7 +29,8 @@ const itemSchema = new mongoose.Schema({
     },
     categoryID: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Category"
+        ref: "Category",
+        required:true
     }
 });
 

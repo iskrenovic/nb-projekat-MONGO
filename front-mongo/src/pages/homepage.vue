@@ -7,7 +7,7 @@
             <button @click="loginClick">{{(getUser?'LOGOUT':'LOGIN')}}</button>
         </div>
         
-        <search-bar @searchBy="searchBy" @cancelFilter="cancelFilter"/>
+        
         <h3 v-if="filtering">ALL:</h3>
         <category-list v-if="filtering" :list="categories" type="category" />
         <h3 v-if="!filtering">10 categories:</h3>
@@ -17,12 +17,10 @@
 
 <script>
 import { defineComponent } from '@vue/composition-api';
-import searchBar from '@/components/searchBar.vue';
 import CategoryList from '@/components/category-list.vue';
 export default defineComponent({
     name:'home-page',
     components:{
-        searchBar,
         CategoryList
     },
     computed:{
@@ -35,14 +33,7 @@ export default defineComponent({
     },
     methods:{
         //@D
-        async searchBy(ime){
-            
-           /* await this.$store.dispatch('getCategoryByName', ime);
-            this.filtering = true;
-            this.categories= this.$store.getters['getCategories']; */
-           // this.categories= [ime];
-           console.log(ime);
-        },
+        
         loginClick(){
 
             if(this.getUser){
